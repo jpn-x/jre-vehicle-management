@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JRE 車両売買管理システム</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --primary-light: #2860a4;
+    --accent: #e8a020;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --info: #17a2b8;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #2d3748;
+    --text-muted: #718096;
+    --border: #e2e8f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Meiryo', sans-serif; background: var(--bg); color: var(--text); }
+
+  header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white; padding: 1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  header h1 { font-size: 1.4rem; font-weight: 700; }
+  header .subtitle { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+  .last-updated { font-size: 0.75rem; opacity: 0.7; text-align: right; }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .kpi-card {
+    background: var(--card); border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--primary);
+  }
+  .kpi-card.green { border-left-color: var(--success); }
+  .kpi-card.orange { border-left-color: var(--warning); }
+  .kpi-card.red { border-left-color: var(--danger); }
+  .kpi-card.blue { border-left-color: var(--info); }
+  .kpi-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-value { font-size: 1.6rem; font-weight: 700; margin: 0.3rem 0; }
+  .kpi-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* Section */
+  .section { background: var(--card); border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .section-title { font-size: 1rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+
+  /* Filter */
+  .filter-bar { padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.3rem 0.9rem; border-radius: 20px; border: 1px solid var(--border);
+    background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { background: var(--primary); color: white; padding: 0.7rem 1rem; text-align: left; white-space: nowrap; font-weight: 600; font-size: 0.78rem; }
+  td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tr:hover td { background: #f7fafd; }
+  tr:last-child td { border-bottom: none; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Status badges */
+  .badge {
+    display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px;
+    font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+  }
+  .badge-settled    { background: #d4edda; color: #155724; }
+  .badge-principal  { background: #fff3cd; color: #856404; }
+  .badge-sold       { background: #fde8d0; color: #7d3800; }
+  .badge-stock      { background: #f8d7da; color: #721c24; }
+
+  /* Settlement table */
+  .settlement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem; padding: 1.5rem;
+  }
+  .settlement-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 1rem;
+    position: relative; overflow: hidden;
+  }
+  .settlement-card::before {
+    content: '✓'; position: absolute; top: 0.5rem; right: 0.8rem;
+    font-size: 1.2rem; color: var(--success); font-weight: 900;
+  }
+  .settlement-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .settlement-label { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.8rem; }
+  .settlement-row { display: flex; justify-content: space-between; font-size: 0.82rem; margin: 0.25rem 0; }
+  .settlement-row .val { font-weight: 600; }
+  .settlement-total { border-top: 2px solid var(--border); margin-top: 0.5rem; padding-top: 0.5rem; }
+  .settlement-total .val { color: var(--success); font-size: 1rem; }
+
+  /* Progress bar */
+  .progress-section { padding: 1.5rem; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .progress-bar { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin-bottom: 1rem; }
+  .progress-fill { height: 100%; border-radius: 5px; transition: width 0.5s; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .kpi-value { font-size: 1.3rem; }
+    th, td { padding: 0.5rem 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🚗 JRE 車両売買管理システム</h1>
+    <div class="subtitle">株式会社ジェイ・アール・イーコーポレイション × ライフオート</div>
+  </div>
+  <div class="last-updated" id="lastUpdated"></div>
+</header>
+
+<div class="container">
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <!-- 運用状況プログレス -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📊 投資状況サマリー</div>
+    </div>
+    <div class="progress-section" id="progressSection"></div>
+  </div>
+
+  <!-- 取引台帳 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🚙 取引台帳（全車両）</div>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">全件</button>
+      <button class="filter-btn" data-filter="settled" onclick="setFilter('settled')">✅ 精算完了</button>
+      <button class="filter-btn" data-filter="principal_returned" onclick="setFilter('principal_returned')">💛 利益精算待ち</button>
+      <button class="filter-btn" data-filter="sold_pending" onclick="setFilter('sold_pending')">🟠 入金待ち</button>
+      <button class="filter-btn" data-filter="in_stock" onclick="setFilter('in_stock')">🔴 在庫</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>ステータス</th>
+            <th>車種</th>
+            <th>年式</th>
+            <th>色</th>
+            <th class="num">走行(km)</th>
+            <th>仕入日</th>
+            <th class="num">仕入価格</th>
+            <th class="num">諸経費</th>
+            <th class="num">総コスト</th>
+            <th>売却日</th>
+            <th class="num">販売価格</th>
+            <th class="num">利益</th>
+            <th class="num">JRE分配(40%)</th>
+            <th>元金回収日</th>
+            <th>利益精算日</th>
+          </tr>
+        </thead>
+        <tbody id="vehicleTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 精算記録 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">💰 精算記録</div>
+    </div>
+    <div class="settlement-grid" id="settlementGrid"></div>
+  </div>
+
+</div>
+
+<script>
+let DATA = null;
+let currentFilter = 'all';
+
+async function loadData() {
+  const res = await fetch('data/transactions.json');
+  DATA = await res.json();
+  render();
+}
+
+function fmt(n) {
+  if (n === null || n === undefined) return '—';
+  return '¥' + Number(n).toLocaleString('ja-JP');
+}
+function fmtNum(n) {
+  if (n === null || n === undefined) return '—';
+  return Number(n).toLocaleString('ja-JP');
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  return d.replace(/-/g, '/');
+}
+
+function statusBadge(status) {
+  const map = {
+    settled: ['精算完了', 'badge-settled'],
+    principal_returned: ['利益精算待ち', 'badge-principal'],
+    sold_pending: ['入金待ち', 'badge-sold'],
+    in_stock: ['在庫', 'badge-stock']
+  };
+  const [label, cls] = map[status] || ['不明', ''];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function render() {
+  document.getElementById('lastUpdated').innerHTML = `最終更新：${DATA.meta.last_updated}`;
+  renderKPI();
+  renderProgress();
+  renderVehicleTable();
+  renderSettlements();
+}
+
+function renderKPI() {
+  const vehicles = DATA.vehicles;
+  const settled = vehicles.filter(v => v.status === 'settled');
+  const active = vehicles.filter(v => v.status !== 'settled');
+  const totalProfitJRE = DATA.settlements.reduce((s, x) => s + x.jre_distribution, 0);
+  const activePrincipal = active.reduce((s, v) => s + v.purchase_price, 0);
+  const roi = totalProfitJRE / DATA.meta.initial_investment * 100;
+
+  const cards = [
+    { label: '初期投資額', value: fmt(DATA.meta.initial_investment), sub: DATA.meta.investment_date + ' 投入', cls: '' },
+    { label: 'JRE確定利益（受取済）', value: fmt(totalProfitJRE), sub: `ROI ${roi.toFixed(1)}%`, cls: 'green' },
+    { label: '運用中元金', value: fmt(activePrincipal), sub: `${active.length}台が稼働中`, cls: 'orange' },
+    { label: '累計取引台数', value: vehicles.length + '台', sub: `精算完了 ${settled.length}台`, cls: 'blue' },
+    { label: '累計販売台数', value: vehicles.filter(v => v.sale_date).length + '台', sub: '売却完了', cls: 'blue' },
+    { label: '累計粗利益', value: fmt(DATA.settlements.reduce((s,x) => s+x.gross_profit, 0)), sub: '精算済分のみ', cls: 'green' },
+  ];
+
+  document.getElementById('kpiGrid').innerHTML = cards.map(c => `
+    <div class="kpi-card ${c.cls}">
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-value">${c.value}</div>
+      <div class="kpi-sub">${c.sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderProgress() {
+  const init = DATA.meta.initial_investment;
+  const received = DATA.settlements.reduce((s, x) => s + x.jre_distribution, 0);
+  const activePrincipal = DATA.vehicles.filter(v => v.status !== 'settled').reduce((s, v) => s + v.purchase_price, 0);
+  const pct = v => Math.min(100, v / init * 100).toFixed(1);
+
+  document.getElementById('progressSection').innerHTML = `
+    <div class="progress-label">
+      <span>JRE受取利益</span><span><strong>${fmt(received)}</strong> / ${fmt(init)}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct(received)}%;background:var(--success)"></div></div>
+
+    <div class="progress-label">
+      <span>運用中元金（回収待ち）</span><span><strong>${fmt(activePrincipal)}</strong> / ${fmt(init)}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct(activePrincipal)}%;background:var(--warning)"></div></div>
+  `;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  renderVehicleTable();
+}
+
+function renderVehicleTable() {
+  const vehicles = currentFilter === 'all'
+    ? DATA.vehicles
+    : DATA.vehicles.filter(v => v.status === currentFilter);
+
+  document.getElementById('vehicleTableBody').innerHTML = vehicles.map(v => `
+    <tr>
+      <td>${v.no}</td>
+      <td>${statusBadge(v.status)}</td>
+      <td><strong>${v.name}</strong></td>
+      <td>${v.year}</td>
+      <td>${v.color}</td>
+      <td class="num">${fmtNum(v.mileage)}</td>
+      <td>${fmtDate(v.purchase_date)}</td>
+      <td class="num">${fmt(v.purchase_price)}</td>
+      <td class="num">${fmt(v.expenses)}</td>
+      <td class="num">${fmt(v.total_cost)}</td>
+      <td>${fmtDate(v.sale_date)}</td>
+      <td class="num">${fmt(v.sale_price)}</td>
+      <td class="num" style="color:${v.profit ? 'var(--success)' : 'inherit'};font-weight:${v.profit ? '700' : 'normal'}">${fmt(v.profit)}</td>
+      <td class="num" style="color:${v.jre_share ? 'var(--primary)' : 'inherit'};font-weight:${v.jre_share ? '700' : 'normal'}">${fmt(v.jre_share)}</td>
+      <td>${fmtDate(v.principal_returned_date)}</td>
+      <td>${fmtDate(v.settlement_date)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderSettlements() {
+  document.getElementById('settlementGrid').innerHTML = DATA.settlements.map(s => `
+    <div class="settlement-card">
+      <div class="settlement-date">${fmtDate(s.date)}</div>
+      <div class="settlement-label">${s.label}</div>
+      <div class="settlement-row"><span>元金</span><span class="val">${fmt(s.principal)}</span></div>
+      <div class="settlement-row"><span>粗利益</span><span class="val">${fmt(s.gross_profit)}</span></div>
+      <div class="settlement-row settlement-total"><span>JRE受取（40%）</span><span class="val">${fmt(s.jre_distribution)}</span></div>
+    </div>
+  `).join('') + `
+    <div class="settlement-card" style="background:#f8fcf8;border-color:var(--success)">
+      <div class="settlement-date">累計</div>
+      <div class="settlement-label" style="color:var(--success)">合計（精算済）</div>
+      <div class="settlement-row"><span>元金回収</span><span class="val">${fmt(DATA.settlements.reduce((s,x)=>s+x.principal,0))}</span></div>
+      <div class="settlement-row"><span>粗利益</span><span class="val">${fmt(DATA.settlements.reduce((s,x)=>s+x.gross_profit,0))}</span></div>
+      <div class="settlement-row settlement-total"><span>JRE受取合計</span><span class="val" style="color:var(--success);font-size:1.1rem">${fmt(DATA.settlements.reduce((s,x)=>s+x.jre_distribution,0))}</span></div>
+    </div>
+  `;
+}
+
+loadData();
+</script>
+</body>
+</html>
