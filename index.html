@@ -3,342 +3,761 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JRE 車両売買管理システム</title>
+<title>JRE 車両売買管理</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  :root {
-    --primary: #1a3a5c;
-    --primary-light: #2860a4;
-    --accent: #e8a020;
-    --success: #28a745;
-    --warning: #ffc107;
-    --danger: #dc3545;
-    --info: #17a2b8;
-    --bg: #f0f4f8;
-    --card: #ffffff;
-    --text: #2d3748;
-    --text-muted: #718096;
-    --border: #e2e8f0;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', 'Meiryo', sans-serif; background: var(--bg); color: var(--text); }
+:root {
+  --navy: #0f2b4e;
+  --blue: #1e5fa8;
+  --sky: #3b9eff;
+  --gold: #f5a623;
+  --green: #27ae60;
+  --green-light: #2ecc71;
+  --red: #e74c3c;
+  --orange: #e67e22;
+  --yellow: #f1c40f;
+  --purple: #8e44ad;
+  --bg: #f0f3f8;
+  --card: #ffffff;
+  --border: #e0e8f0;
+  --text: #1a2a3a;
+  --muted: #7a8fa8;
+  --shadow: 0 4px 20px rgba(15,43,78,0.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
 
-  header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: white; padding: 1rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  header h1 { font-size: 1.4rem; font-weight: 700; }
-  header .subtitle { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
-  .last-updated { font-size: 0.75rem; opacity: 0.7; text-align: right; }
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a4080 60%, var(--blue) 100%);
+  padding: 0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,.35);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+}
+.header-title { color: #fff; }
+.header-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.3px; }
+.header-title .sub { font-size: 0.72rem; opacity: .65; margin-top: 2px; }
+.header-meta { text-align: right; color: rgba(255,255,255,.6); font-size: 0.72rem; line-height: 1.6; }
 
-  .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+/* ── Layout ── */
+.page { max-width: 1440px; margin: 0 auto; padding: 24px 28px 48px; }
 
-  /* KPI Cards */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem; margin-bottom: 1.5rem;
-  }
-  .kpi-card {
-    background: var(--card); border-radius: 12px;
-    padding: 1.2rem 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    border-left: 4px solid var(--primary);
-  }
-  .kpi-card.green { border-left-color: var(--success); }
-  .kpi-card.orange { border-left-color: var(--warning); }
-  .kpi-card.red { border-left-color: var(--danger); }
-  .kpi-card.blue { border-left-color: var(--info); }
-  .kpi-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .kpi-value { font-size: 1.6rem; font-weight: 700; margin: 0.3rem 0; }
-  .kpi-sub { font-size: 0.75rem; color: var(--text-muted); }
+/* ── Section title ── */
+.sec-label {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1.05rem; font-weight: 800; color: var(--navy);
+  margin-bottom: 16px; margin-top: 32px;
+}
+.sec-label:first-child { margin-top: 0; }
+.sec-label::before {
+  content: ''; display: block;
+  width: 4px; height: 22px; border-radius: 3px;
+  background: linear-gradient(180deg, var(--sky), var(--blue));
+}
 
-  /* Section */
-  .section { background: var(--card); border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
-    background: #fafbfc;
-  }
-  .section-title { font-size: 1rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+/* ── Card base ── */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
 
-  /* Filter */
-  .filter-bar { padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .filter-btn {
-    padding: 0.3rem 0.9rem; border-radius: 20px; border: 1px solid var(--border);
-    background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600;
-    transition: all 0.15s;
-  }
-  .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-  .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+/* ══════════════════════
+   SECTION 1: 300万ゾーン
+   ══════════════════════ */
+.money-zone {
+  background: linear-gradient(135deg, var(--navy) 0%, #1e4a8a 100%);
+  border-radius: 20px;
+  padding: 32px;
+  color: white;
+  box-shadow: 0 8px 32px rgba(15,43,78,0.35);
+}
+.money-zone-title {
+  font-size: 1rem; font-weight: 700; opacity: .75;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+}
+.money-zone-headline {
+  font-size: 2.4rem; font-weight: 900; line-height: 1;
+  color: var(--gold); margin-bottom: 4px;
+}
+.money-zone-sub { font-size: 0.8rem; opacity: .6; margin-bottom: 28px; }
 
-  /* Table */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { background: var(--primary); color: white; padding: 0.7rem 1rem; text-align: left; white-space: nowrap; font-weight: 600; font-size: 0.78rem; }
-  td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  tr:hover td { background: #f7fafd; }
-  tr:last-child td { border-bottom: none; }
-  .num { text-align: right; font-variant-numeric: tabular-nums; }
+.money-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.money-box {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: transform .2s;
+  position: relative;
+}
+.money-box:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  opacity: 0.35;
+  z-index: 1;
+}
+.money-box:hover { transform: translateY(-3px); }
+.money-box-icon { font-size: 2rem; margin-bottom: 8px; }
+.money-box-label { font-size: 0.72rem; opacity: .65; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.money-box-val { font-size: 1.35rem; font-weight: 800; color: white; }
+.money-box-val.gold { color: var(--gold); }
+.money-box-val.green { color: var(--green-light); }
+.money-box-val.orange { color: #ff9f43; }
+.money-box-val.sky { color: #74b9ff; }
+.money-box-sub { font-size: 0.7rem; opacity: .5; margin-top: 4px; }
+.money-arrow { display: none; }
 
-  /* Status badges */
-  .badge {
-    display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px;
-    font-size: 0.72rem; font-weight: 700; white-space: nowrap;
-  }
-  .badge-settled    { background: #d4edda; color: #155724; }
-  .badge-principal  { background: #fff3cd; color: #856404; }
-  .badge-sold       { background: #fde8d0; color: #7d3800; }
-  .badge-stock      { background: #f8d7da; color: #721c24; }
+/* Donut + bars row */
+.money-viz {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.donut-wrap { position: relative; }
+.donut-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; pointer-events: none;
+}
+.donut-center-val { font-size: 1.4rem; font-weight: 900; color: white; }
+.donut-center-label { font-size: 0.65rem; opacity: .6; margin-top: 2px; }
+.donut-legend { display: flex; flex-direction: column; gap: 10px; }
+.legend-item { display: flex; align-items: center; gap: 10px; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.legend-info { flex: 1; }
+.legend-label { font-size: 0.78rem; opacity: .75; }
+.legend-val { font-size: 0.95rem; font-weight: 700; }
+.legend-pct { font-size: 0.7rem; opacity: .5; margin-left: 6px; }
 
-  /* Settlement table */
-  .settlement-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem; padding: 1.5rem;
-  }
-  .settlement-card {
-    border: 1px solid var(--border); border-radius: 10px; padding: 1rem;
-    position: relative; overflow: hidden;
-  }
-  .settlement-card::before {
-    content: '✓'; position: absolute; top: 0.5rem; right: 0.8rem;
-    font-size: 1.2rem; color: var(--success); font-weight: 900;
-  }
-  .settlement-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-  .settlement-label { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.8rem; }
-  .settlement-row { display: flex; justify-content: space-between; font-size: 0.82rem; margin: 0.25rem 0; }
-  .settlement-row .val { font-weight: 600; }
-  .settlement-total { border-top: 2px solid var(--border); margin-top: 0.5rem; padding-top: 0.5rem; }
-  .settlement-total .val { color: var(--success); font-size: 1rem; }
+/* ══════════════════
+   SECTION 2: KPI strip
+   ══════════════════ */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+.kpi {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.kpi::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi.k-gold::after { background: var(--gold); }
+.kpi.k-green::after { background: var(--green); }
+.kpi.k-blue::after { background: var(--sky); }
+.kpi.k-orange::after { background: var(--orange); }
+.kpi.k-purple::after { background: var(--purple); }
+.kpi-emoji { font-size: 1.5rem; margin-bottom: 8px; }
+.kpi-label { font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.kpi-value { font-size: 1.5rem; font-weight: 900; margin: 4px 0; line-height: 1; }
+.kpi-value.gold { color: var(--gold); }
+.kpi-value.green { color: var(--green); }
+.kpi-value.blue { color: var(--blue); }
+.kpi-value.orange { color: var(--orange); }
+.kpi-value.purple { color: var(--purple); }
+.kpi-sub { font-size: 0.7rem; color: var(--muted); }
 
-  /* Progress bar */
-  .progress-section { padding: 1.5rem; }
-  .progress-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; }
-  .progress-bar { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin-bottom: 1rem; }
-  .progress-fill { height: 100%; border-radius: 5px; transition: width 0.5s; }
+/* ══════════════════════
+   SECTION 3: Charts row
+   ══════════════════════ */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.chart-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 24px; }
+.chart-title { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
 
-  /* Responsive */
-  @media (max-width: 600px) {
-    .kpi-value { font-size: 1.3rem; }
-    th, td { padding: 0.5rem 0.7rem; }
-  }
+/* ══════════════════════
+   SECTION 4: Vehicle Table
+   ══════════════════════ */
+.table-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+.table-toolbar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.table-toolbar-title { font-size: 0.9rem; font-weight: 800; color: var(--navy); flex: 1; }
+.pill {
+  padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+  font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all .15s;
+  background: white; color: var(--muted);
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.on { background: var(--navy); color: white; border-color: var(--navy); }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+thead th {
+  background: var(--navy); color: rgba(255,255,255,.9);
+  padding: 10px 14px; text-align: left; white-space: nowrap;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: .3px;
+}
+thead th.r { text-align: right; }
+tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+tbody td.r { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #f6faff; }
+.profit-cell { font-weight: 800; }
+.profit-cell.pos { color: var(--green); }
+.profit-cell.neg { color: var(--red); }
+
+/* Status badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+}
+.s-settled  { background: #d5f5e3; color: #1e8449; }
+.s-principal{ background: #fef9e7; color: #d35400; border: 1px solid #f5cba7; }
+.s-sold     { background: #fde8d0; color: #a04000; }
+.s-stock    { background: #fde8e8; color: #922b21; }
+
+/* ROI bar inline */
+.roi-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.roi-bar { height: 6px; border-radius: 3px; min-width: 4px; transition: width .4s; }
+.roi-txt { font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+
+/* ══════════════════════
+   SECTION 5: Settlement cards
+   ══════════════════════ */
+.settle-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.settle-card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  border-top: 4px solid var(--green);
+  position: relative;
+}
+.settle-card.total { border-top-color: var(--gold); background: linear-gradient(135deg, #fffbf0, #fff); }
+.settle-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+.settle-label { font-size: 0.88rem; font-weight: 800; color: var(--navy); margin-bottom: 14px; }
+.settle-line { display: flex; justify-content: space-between; font-size: 0.8rem; margin: 5px 0; }
+.settle-line .lv { color: var(--muted); }
+.settle-line .rv { font-weight: 700; }
+.settle-divider { border: none; border-top: 1px dashed var(--border); margin: 10px 0; }
+.settle-total-val { font-size: 1.15rem; font-weight: 900; color: var(--green); }
+.settle-check { position: absolute; top: 12px; right: 14px; font-size: 1rem; }
+
+/* Timeline */
+.timeline { padding: 8px 0; }
+.tl-item { display: flex; gap: 16px; margin-bottom: 20px; position: relative; }
+.tl-item:not(:last-child)::before {
+  content: ''; position: absolute;
+  left: 19px; top: 38px; bottom: -20px;
+  width: 2px; background: var(--border);
+}
+.tl-dot {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.tl-dot.buy  { background: #ebf5fb; border: 2px solid var(--sky); }
+.tl-dot.sell { background: #d5f5e3; border: 2px solid var(--green); }
+.tl-dot.pend { background: #fef9e7; border: 2px solid var(--gold); }
+.tl-body { flex: 1; padding-top: 6px; }
+.tl-date { font-size: 0.7rem; color: var(--muted); }
+.tl-name { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+.tl-detail { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .money-flow { grid-template-columns: 1fr 40px 1fr 40px 1fr 40px 1fr; }
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 800px) {
+  .page { padding: 16px; }
+  .money-flow { grid-template-columns: 1fr; }
+  .money-arrow { display: none; }
+  .money-viz { grid-template-columns: 1fr; }
+  .charts-row { grid-template-columns: 1fr; }
+  .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <h1>🚗 JRE 車両売買管理システム</h1>
-    <div class="subtitle">株式会社ジェイ・アール・イーコーポレイション × ライフオート</div>
+  <div class="header-inner">
+    <div class="header-title">
+      <h1>🚗 JRE 車両売買管理システム</h1>
+      <div class="sub">株式会社ジェイ・アール・イーコーポレイション × ライフオート（はやちゃん）</div>
+    </div>
+    <div class="header-meta" id="headerMeta"></div>
   </div>
-  <div class="last-updated" id="lastUpdated"></div>
 </header>
 
-<div class="container">
+<div class="page">
 
-  <!-- KPI Cards -->
-  <div class="kpi-grid" id="kpiGrid"></div>
+  <!-- ━━━ 300万円の今 ━━━ -->
+  <div class="sec-label">💴 300万円の今どこにある？</div>
 
-  <!-- 運用状況プログレス -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">📊 投資状況サマリー</div>
+  <div class="money-zone">
+    <div class="money-zone-title">投資元本 追跡レポート</div>
+    <div class="money-zone-headline" id="totalAsset">¥—</div>
+    <div class="money-zone-sub" id="totalAssetSub">読み込み中…</div>
+
+    <div class="money-flow" id="moneyFlow">
+      <!-- JS fill -->
     </div>
-    <div class="progress-section" id="progressSection"></div>
+
+    <div class="money-viz">
+      <div class="donut-wrap" style="width:200px;height:200px;">
+        <canvas id="donutChart" width="200" height="200"></canvas>
+        <div class="donut-center">
+          <div class="donut-center-val" id="donutCenter">¥3M</div>
+          <div class="donut-center-label">総資産</div>
+        </div>
+      </div>
+      <div class="donut-legend" id="donutLegend"></div>
+    </div>
   </div>
 
-  <!-- 取引台帳 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">🚙 取引台帳（全車両）</div>
+  <!-- ━━━ KPIストリップ ━━━ -->
+  <div class="sec-label">📊 主要指標</div>
+  <div class="kpi-strip" id="kpiStrip"></div>
+
+  <!-- ━━━ チャート2列 ━━━ -->
+  <div class="sec-label">📈 グラフで見る利益の推移</div>
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">💰 精算ごとのJRE受取利益（累計）</div>
+      <canvas id="waterfallChart" height="200"></canvas>
     </div>
-    <div class="filter-bar" id="filterBar">
-      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">全件</button>
-      <button class="filter-btn" data-filter="settled" onclick="setFilter('settled')">✅ 精算完了</button>
-      <button class="filter-btn" data-filter="principal_returned" onclick="setFilter('principal_returned')">💛 利益精算待ち</button>
-      <button class="filter-btn" data-filter="sold_pending" onclick="setFilter('sold_pending')">🟠 入金待ち</button>
-      <button class="filter-btn" data-filter="in_stock" onclick="setFilter('in_stock')">🔴 在庫</button>
+    <div class="chart-card">
+      <div class="chart-title">🏆 車両別 利益ランキング（JRE分配額）</div>
+      <canvas id="rankingChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- ━━━ 取引台帳 ━━━ -->
+  <div class="sec-label">🚙 取引台帳</div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="table-toolbar-title">全車両データ</span>
+      <button class="pill on" onclick="setF('all')">全 件</button>
+      <button class="pill" onclick="setF('settled')">✅ 精算完了</button>
+      <button class="pill" onclick="setF('principal_returned')">💛 利益精算待ち</button>
+      <button class="pill" onclick="setF('sold_pending')">🟠 入金待ち</button>
+      <button class="pill" onclick="setF('in_stock')">🔴 在 庫</button>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>No</th>
-            <th>ステータス</th>
-            <th>車種</th>
-            <th>年式</th>
-            <th>色</th>
-            <th class="num">走行(km)</th>
-            <th>仕入日</th>
-            <th class="num">仕入価格</th>
-            <th class="num">諸経費</th>
-            <th class="num">総コスト</th>
-            <th>売却日</th>
-            <th class="num">販売価格</th>
-            <th class="num">利益</th>
-            <th class="num">JRE分配(40%)</th>
-            <th>元金回収日</th>
-            <th>利益精算日</th>
+            <th>No</th><th>ステータス</th><th>車種</th><th>年式</th><th>色</th>
+            <th class="r">走行(km)</th><th>仕入日</th><th class="r">仕入価格</th>
+            <th class="r">諸経費</th><th>売却日</th><th class="r">販売価格</th>
+            <th class="r">粗利益</th><th class="r">JRE取り分(40%)</th>
+            <th>ROI</th><th>元金回収日</th><th>精算日</th>
           </tr>
         </thead>
-        <tbody id="vehicleTableBody"></tbody>
+        <tbody id="vehicleTbody"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- 精算記録 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">💰 精算記録</div>
-    </div>
-    <div class="settlement-grid" id="settlementGrid"></div>
+  <!-- ━━━ 精算カード ━━━ -->
+  <div class="sec-label">💳 精算記録</div>
+  <div class="settle-row" id="settleRow"></div>
+
+  <!-- ━━━ タイムライン ━━━ -->
+  <div class="sec-label">📅 仕入れ・売却タイムライン</div>
+  <div class="card">
+    <div class="timeline" id="timeline"></div>
   </div>
 
-</div>
+</div><!-- /page -->
 
 <script>
-let DATA = null;
-let currentFilter = 'all';
+let D = null, filterCurrent = 'all';
 
-async function loadData() {
-  const res = await fetch('data/transactions.json');
-  DATA = await res.json();
-  render();
-}
-
-function fmt(n) {
-  if (n === null || n === undefined) return '—';
-  return '¥' + Number(n).toLocaleString('ja-JP');
-}
-function fmtNum(n) {
-  if (n === null || n === undefined) return '—';
-  return Number(n).toLocaleString('ja-JP');
-}
-function fmtDate(d) {
-  if (!d) return '—';
-  return d.replace(/-/g, '/');
+async function init() {
+  const r = await fetch('data/transactions.json');
+  D = await r.json();
+  document.getElementById('headerMeta').innerHTML =
+    `最終更新日<br><strong>${D.meta.last_updated}</strong>`;
+  renderAll();
 }
 
-function statusBadge(status) {
-  const map = {
-    settled: ['精算完了', 'badge-settled'],
-    principal_returned: ['利益精算待ち', 'badge-principal'],
-    sold_pending: ['入金待ち', 'badge-sold'],
-    in_stock: ['在庫', 'badge-stock']
-  };
-  const [label, cls] = map[status] || ['不明', ''];
-  return `<span class="badge ${cls}">${label}</span>`;
+/* ── helpers ── */
+const yen = n => n == null ? '—' : '¥' + Number(n).toLocaleString('ja-JP');
+const num = n => n == null ? '—' : Number(n).toLocaleString('ja-JP');
+const fd  = s => s ? s.replace(/-/g, '/') : '—';
+
+/* ── Status ── */
+const BADGE = {
+  settled:           ['s-settled',   '✅ 精算完了'],
+  principal_returned:['s-principal', '💛 利益精算待ち'],
+  sold_pending:      ['s-sold',      '🟠 入金待ち'],
+  in_stock:          ['s-stock',     '🔴 在庫'],
+};
+function badge(st) {
+  const [cls, lbl] = BADGE[st] || ['',''];
+  return `<span class="badge ${cls}">${lbl}</span>`;
 }
 
-function render() {
-  document.getElementById('lastUpdated').innerHTML = `最終更新：${DATA.meta.last_updated}`;
-  renderKPI();
-  renderProgress();
-  renderVehicleTable();
-  renderSettlements();
+/* ━━━━━━━━━━━━━━━
+   300万円の今
+   ━━━━━━━━━━━━━━━ */
+function renderMoneyZone() {
+  const vs = D.vehicles;
+  const init = D.meta.initial_investment;
+  const totalJRE = D.settlements.reduce((s, x) => s + x.jre_distribution, 0);
+
+  /* 在庫中の元金（入金待ち含む） */
+  const activePrincipal = vs
+    .filter(v => ['in_stock','sold_pending'].includes(v.status))
+    .reduce((s, v) => s + v.purchase_price, 0);
+
+  /* 利益精算待ち（元金は戻っているが利益未受取） */
+  const pendingProfit = vs
+    .filter(v => v.status === 'principal_returned')
+    .length;
+
+  /* 手元現金余力 ＝ 初期投資 + 確定利益受取済 − 在庫中元金 */
+  const cashBuffer = init + totalJRE - activePrincipal;
+  const totalAsset = init + totalJRE;
+
+  document.getElementById('totalAsset').textContent = yen(totalAsset);
+  document.getElementById('totalAssetSub').textContent =
+    `初期投資 ${yen(init)} ＋ 確定利益受取 ${yen(totalJRE)}`;
+  document.getElementById('donutCenter').textContent = yen(totalAsset).replace('¥','¥');
+
+  /* フロー */
+  document.getElementById('moneyFlow').innerHTML = `
+    <div class="money-box">
+      <div class="money-box-icon">💼</div>
+      <div class="money-box-label">初期投資</div>
+      <div class="money-box-val gold">${yen(init)}</div>
+      <div class="money-box-sub">2025/11/12 スタート</div>
+    </div>
+    <div class="money-box">
+      <div class="money-box-icon">🚗</div>
+      <div class="money-box-label">在庫中の元金</div>
+      <div class="money-box-val orange">${yen(activePrincipal)}</div>
+      <div class="money-box-sub">${vs.filter(v=>['in_stock','sold_pending'].includes(v.status)).length}台が稼働中</div>
+    </div>
+    <div class="money-box">
+      <div class="money-box-icon">💵</div>
+      <div class="money-box-label">手元現金余力</div>
+      <div class="money-box-val sky">${yen(cashBuffer)}</div>
+      <div class="money-box-sub">次の仕入れに使える</div>
+    </div>
+    <div class="money-box">
+      <div class="money-box-icon">📈</div>
+      <div class="money-box-label">JRE確定利益</div>
+      <div class="money-box-val green">${yen(totalJRE)}</div>
+      <div class="money-box-sub">${D.settlements.length}回精算済み</div>
+    </div>
+  `;
+
+  /* ドーナツ */
+  const donutData = [
+    { label: '在庫中の元金', val: activePrincipal, color: '#ff9f43' },
+    { label: '手元現金余力', val: cashBuffer,       color: '#74b9ff' },
+    { label: '受取済み利益(JRE)', val: totalJRE,   color: '#27ae60' },
+  ];
+  const pct = v => ((v / totalAsset) * 100).toFixed(1);
+
+  document.getElementById('donutLegend').innerHTML = donutData.map(d => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${d.color}"></div>
+      <div class="legend-info">
+        <div class="legend-label">${d.label}</div>
+        <div class="legend-val">${yen(d.val)}<span class="legend-pct">${pct(d.val)}%</span></div>
+      </div>
+    </div>
+  `).join('');
+
+  new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: donutData.map(d => d.label),
+      datasets: [{
+        data: donutData.map(d => d.val),
+        backgroundColor: donutData.map(d => d.color),
+        borderWidth: 3,
+        borderColor: '#1e4a8a',
+        hoverOffset: 10,
+      }]
+    },
+    options: {
+      cutout: '68%',
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ` ${yen(ctx.raw)} (${pct(ctx.raw)}%)` }
+      }},
+    }
+  });
 }
 
+/* ━━━━━━━━━━━━━━━
+   KPI Strip
+   ━━━━━━━━━━━━━━━ */
 function renderKPI() {
-  const vehicles = DATA.vehicles;
-  const settled = vehicles.filter(v => v.status === 'settled');
-  const active = vehicles.filter(v => v.status !== 'settled');
-  const totalProfitJRE = DATA.settlements.reduce((s, x) => s + x.jre_distribution, 0);
-  const activePrincipal = active.reduce((s, v) => s + v.purchase_price, 0);
-  const roi = totalProfitJRE / DATA.meta.initial_investment * 100;
+  const vs = D.vehicles;
+  const totalJRE = D.settlements.reduce((s,x) => s+x.jre_distribution, 0);
+  const totalGross = D.settlements.reduce((s,x) => s+x.gross_profit, 0);
+  const settled = vs.filter(v => v.status==='settled');
+  const active = vs.filter(v => v.status!=='settled');
+  const roi = (totalJRE / D.meta.initial_investment * 100).toFixed(1);
+  const avgProfit = settled.length ? Math.round(settled.reduce((s,v)=>s+(v.profit||0),0)/settled.length) : 0;
 
-  const cards = [
-    { label: '初期投資額', value: fmt(DATA.meta.initial_investment), sub: DATA.meta.investment_date + ' 投入', cls: '' },
-    { label: 'JRE確定利益（受取済）', value: fmt(totalProfitJRE), sub: `ROI ${roi.toFixed(1)}%`, cls: 'green' },
-    { label: '運用中元金', value: fmt(activePrincipal), sub: `${active.length}台が稼働中`, cls: 'orange' },
-    { label: '累計取引台数', value: vehicles.length + '台', sub: `精算完了 ${settled.length}台`, cls: 'blue' },
-    { label: '累計販売台数', value: vehicles.filter(v => v.sale_date).length + '台', sub: '売却完了', cls: 'blue' },
-    { label: '累計粗利益', value: fmt(DATA.settlements.reduce((s,x) => s+x.gross_profit, 0)), sub: '精算済分のみ', cls: 'green' },
+  const items = [
+    { e:'💰', l:'JRE受取利益 累計', v: yen(totalJRE), s:`ROI ${roi}%`, vc:'gold', k:'k-gold'},
+    { e:'📦', l:'粗利益 累計（精算済）',v: yen(totalGross), s:`はやちゃん分 ${yen(Math.round(totalGross*0.6))}`, vc:'green', k:'k-green'},
+    { e:'🚙', l:'総取引台数',         v: vs.length+'台', s:`精算完了 ${settled.length}台`, vc:'blue', k:'k-blue'},
+    { e:'⏳', l:'運用中台数',          v: active.length+'台', s:`在庫・精算待ち含む`, vc:'orange', k:'k-orange'},
+    { e:'🏅', l:'1台あたり平均利益',    v: yen(avgProfit), s:`精算済み${settled.length}台の平均`, vc:'purple', k:'k-purple'},
   ];
 
-  document.getElementById('kpiGrid').innerHTML = cards.map(c => `
-    <div class="kpi-card ${c.cls}">
-      <div class="kpi-label">${c.label}</div>
-      <div class="kpi-value">${c.value}</div>
-      <div class="kpi-sub">${c.sub}</div>
+  document.getElementById('kpiStrip').innerHTML = items.map(i=>`
+    <div class="kpi ${i.k}">
+      <div class="kpi-emoji">${i.e}</div>
+      <div class="kpi-label">${i.l}</div>
+      <div class="kpi-value ${i.vc}">${i.v}</div>
+      <div class="kpi-sub">${i.s}</div>
     </div>
   `).join('');
 }
 
-function renderProgress() {
-  const init = DATA.meta.initial_investment;
-  const received = DATA.settlements.reduce((s, x) => s + x.jre_distribution, 0);
-  const activePrincipal = DATA.vehicles.filter(v => v.status !== 'settled').reduce((s, v) => s + v.purchase_price, 0);
-  const pct = v => Math.min(100, v / init * 100).toFixed(1);
+/* ━━━━━━━━━━━━━━━
+   チャート
+   ━━━━━━━━━━━━━━━ */
+function renderCharts() {
+  /* 精算累計棒グラフ */
+  let cumulative = 0;
+  const wfLabels = [];
+  const wfData = [];
+  D.settlements.forEach((s, i) => {
+    cumulative += s.jre_distribution;
+    wfLabels.push(`第${i+1}回\n${s.date.substring(0,7)}`);
+    wfData.push(cumulative);
+  });
 
-  document.getElementById('progressSection').innerHTML = `
-    <div class="progress-label">
-      <span>JRE受取利益</span><span><strong>${fmt(received)}</strong> / ${fmt(init)}</span>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" style="width:${pct(received)}%;background:var(--success)"></div></div>
+  new Chart(document.getElementById('waterfallChart'), {
+    type: 'bar',
+    data: {
+      labels: wfLabels,
+      datasets: [{
+        label: 'JRE累計利益',
+        data: wfData,
+        backgroundColor: wfData.map((_, i) => `hsla(${140 - i*15}, 60%, ${42 + i*4}%, 0.85)`),
+        borderRadius: 8,
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` 累計 ${yen(ctx.raw)}` } }
+      },
+      scales: {
+        y: { ticks: { callback: v => '¥'+Math.round(v/1000)+'k' } }
+      }
+    }
+  });
 
-    <div class="progress-label">
-      <span>運用中元金（回収待ち）</span><span><strong>${fmt(activePrincipal)}</strong> / ${fmt(init)}</span>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" style="width:${pct(activePrincipal)}%;background:var(--warning)"></div></div>
-  `;
+  /* 利益ランキング横棒グラフ */
+  const settled = D.vehicles.filter(v => v.profit != null && v.profit > 0)
+    .sort((a,b) => b.jre_share - a.jre_share);
+  const colors = ['#27ae60','#2ecc71','#1abc9c','#16a085','#27ae60','#8e44ad','#2980b9'];
+
+  new Chart(document.getElementById('rankingChart'), {
+    type: 'bar',
+    data: {
+      labels: settled.map(v => v.name),
+      datasets: [{
+        label: 'JRE分配',
+        data: settled.map(v => v.jre_share),
+        backgroundColor: settled.map((_,i) => colors[i % colors.length] + 'cc'),
+        borderRadius: 6,
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` JRE ${yen(ctx.raw)} (ROI ${((D.vehicles.find(v=>v.name===ctx.label)?.profit||0)/D.vehicles.find(v=>v.name===ctx.label)?.purchase_price*100).toFixed(0)}%)` } }
+      },
+      scales: {
+        x: { ticks: { callback: v => '¥'+Math.round(v/1000)+'k' } }
+      }
+    }
+  });
 }
 
-function setFilter(f) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
-  renderVehicleTable();
+/* ━━━━━━━━━━━━━━━
+   取引台帳テーブル
+   ━━━━━━━━━━━━━━━ */
+function setF(f) {
+  filterCurrent = f;
+  document.querySelectorAll('.pill').forEach(b =>
+    b.classList.toggle('on', b.textContent.includes({
+      all:'全', settled:'精算', principal_returned:'利益精算',
+      sold_pending:'入金待ち', in_stock:'在庫'
+    }[f]))
+  );
+  renderTable();
 }
 
-function renderVehicleTable() {
-  const vehicles = currentFilter === 'all'
-    ? DATA.vehicles
-    : DATA.vehicles.filter(v => v.status === currentFilter);
+function renderTable() {
+  const vs = filterCurrent === 'all'
+    ? D.vehicles
+    : D.vehicles.filter(v => v.status === filterCurrent);
 
-  document.getElementById('vehicleTableBody').innerHTML = vehicles.map(v => `
-    <tr>
+  document.getElementById('vehicleTbody').innerHTML = vs.map(v => {
+    const roi = v.purchase_price && v.profit
+      ? (v.profit / v.purchase_price * 100).toFixed(0)
+      : null;
+    const roiBar = roi != null
+      ? `<div class="roi-bar-wrap">
+           <div class="roi-bar" style="width:${Math.min(roi,80)}px;background:${roi>30?'#27ae60':roi>15?'#f39c12':'#e74c3c'}"></div>
+           <span class="roi-txt" style="color:${roi>30?'#27ae60':roi>15?'#f39c12':'#e74c3c'}">${roi}%</span>
+         </div>`
+      : '—';
+    return `<tr>
       <td>${v.no}</td>
-      <td>${statusBadge(v.status)}</td>
+      <td>${badge(v.status)}</td>
       <td><strong>${v.name}</strong></td>
       <td>${v.year}</td>
       <td>${v.color}</td>
-      <td class="num">${fmtNum(v.mileage)}</td>
-      <td>${fmtDate(v.purchase_date)}</td>
-      <td class="num">${fmt(v.purchase_price)}</td>
-      <td class="num">${fmt(v.expenses)}</td>
-      <td class="num">${fmt(v.total_cost)}</td>
-      <td>${fmtDate(v.sale_date)}</td>
-      <td class="num">${fmt(v.sale_price)}</td>
-      <td class="num" style="color:${v.profit ? 'var(--success)' : 'inherit'};font-weight:${v.profit ? '700' : 'normal'}">${fmt(v.profit)}</td>
-      <td class="num" style="color:${v.jre_share ? 'var(--primary)' : 'inherit'};font-weight:${v.jre_share ? '700' : 'normal'}">${fmt(v.jre_share)}</td>
-      <td>${fmtDate(v.principal_returned_date)}</td>
-      <td>${fmtDate(v.settlement_date)}</td>
-    </tr>
-  `).join('');
+      <td class="r">${num(v.mileage)}</td>
+      <td>${fd(v.purchase_date)}</td>
+      <td class="r">${yen(v.purchase_price)}</td>
+      <td class="r">${yen(v.expenses)}</td>
+      <td>${fd(v.sale_date)}</td>
+      <td class="r">${yen(v.sale_price)}</td>
+      <td class="r profit-cell ${v.profit>0?'pos':''}">${yen(v.profit)}</td>
+      <td class="r profit-cell pos">${yen(v.jre_share)}</td>
+      <td>${roiBar}</td>
+      <td>${fd(v.principal_returned_date)}</td>
+      <td>${fd(v.settlement_date)}</td>
+    </tr>`;
+  }).join('');
 }
 
+/* ━━━━━━━━━━━━━━━
+   精算カード
+   ━━━━━━━━━━━━━━━ */
 function renderSettlements() {
-  document.getElementById('settlementGrid').innerHTML = DATA.settlements.map(s => `
-    <div class="settlement-card">
-      <div class="settlement-date">${fmtDate(s.date)}</div>
-      <div class="settlement-label">${s.label}</div>
-      <div class="settlement-row"><span>元金</span><span class="val">${fmt(s.principal)}</span></div>
-      <div class="settlement-row"><span>粗利益</span><span class="val">${fmt(s.gross_profit)}</span></div>
-      <div class="settlement-row settlement-total"><span>JRE受取（40%）</span><span class="val">${fmt(s.jre_distribution)}</span></div>
+  const totalPrincipal = D.settlements.reduce((s,x)=>s+x.principal,0);
+  const totalGross     = D.settlements.reduce((s,x)=>s+x.gross_profit,0);
+  const totalJRE       = D.settlements.reduce((s,x)=>s+x.jre_distribution,0);
+
+  const cards = D.settlements.map(s => `
+    <div class="settle-card">
+      <span class="settle-check">✅</span>
+      <div class="settle-date">${fd(s.date)}</div>
+      <div class="settle-label">${s.label}</div>
+      <div class="settle-line"><span class="lv">元金</span><span class="rv">${yen(s.principal)}</span></div>
+      <div class="settle-line"><span class="lv">粗利益</span><span class="rv">${yen(s.gross_profit)}</span></div>
+      <hr class="settle-divider">
+      <div class="settle-line">
+        <span class="lv">JRE受取（40%）</span>
+        <span class="rv settle-total-val">${yen(s.jre_distribution)}</span>
+      </div>
     </div>
-  `).join('') + `
-    <div class="settlement-card" style="background:#f8fcf8;border-color:var(--success)">
-      <div class="settlement-date">累計</div>
-      <div class="settlement-label" style="color:var(--success)">合計（精算済）</div>
-      <div class="settlement-row"><span>元金回収</span><span class="val">${fmt(DATA.settlements.reduce((s,x)=>s+x.principal,0))}</span></div>
-      <div class="settlement-row"><span>粗利益</span><span class="val">${fmt(DATA.settlements.reduce((s,x)=>s+x.gross_profit,0))}</span></div>
-      <div class="settlement-row settlement-total"><span>JRE受取合計</span><span class="val" style="color:var(--success);font-size:1.1rem">${fmt(DATA.settlements.reduce((s,x)=>s+x.jre_distribution,0))}</span></div>
+  `).join('');
+
+  const total = `
+    <div class="settle-card total">
+      <span class="settle-check">🏆</span>
+      <div class="settle-date">累計（全精算）</div>
+      <div class="settle-label" style="color:var(--gold)">合計</div>
+      <div class="settle-line"><span class="lv">元金</span><span class="rv">${yen(totalPrincipal)}</span></div>
+      <div class="settle-line"><span class="lv">粗利益</span><span class="rv">${yen(totalGross)}</span></div>
+      <hr class="settle-divider">
+      <div class="settle-line">
+        <span class="lv">JRE受取 累計</span>
+        <span class="rv settle-total-val" style="color:var(--gold)">${yen(totalJRE)}</span>
+      </div>
     </div>
   `;
+
+  document.getElementById('settleRow').innerHTML = cards + total;
 }
 
-loadData();
+/* ━━━━━━━━━━━━━━━
+   タイムライン
+   ━━━━━━━━━━━━━━━ */
+function renderTimeline() {
+  const events = [];
+  D.vehicles.forEach(v => {
+    if (v.purchase_date) events.push({ date: v.purchase_date, type:'buy',  v });
+    if (v.sale_date && v.sale_date.length === 10) events.push({ date: v.sale_date, type:'sell', v });
+  });
+  events.sort((a,b) => a.date > b.date ? -1 : 1);
+
+  document.getElementById('timeline').innerHTML = events.slice(0, 20).map(e => {
+    if (e.type === 'buy') return `
+      <div class="tl-item">
+        <div class="tl-dot buy">🛒</div>
+        <div class="tl-body">
+          <div class="tl-date">${fd(e.date)}</div>
+          <div class="tl-name">【仕入れ】${e.v.name} (${e.v.year})</div>
+          <div class="tl-detail">${e.v.color} / ${num(e.v.mileage)}km / ${yen(e.v.purchase_price)}</div>
+        </div>
+      </div>`;
+    return `
+      <div class="tl-item">
+        <div class="tl-dot sell">💰</div>
+        <div class="tl-body">
+          <div class="tl-date">${fd(e.date)}</div>
+          <div class="tl-name">【売却】${e.v.name} (${e.v.year})</div>
+          <div class="tl-detail">${e.v.sale_price ? yen(e.v.sale_price) + ' → 利益 ' + yen(e.v.profit) : '販売価格確認中'}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderAll() {
+  renderMoneyZone();
+  renderKPI();
+  renderCharts();
+  renderTable();
+  renderSettlements();
+  renderTimeline();
+}
+
+init();
 </script>
 </body>
 </html>
