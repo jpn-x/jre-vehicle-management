@@ -303,7 +303,7 @@ tbody tr:hover td { background: #f6faff; }
   <div class="sec-label">📈 グラフで見る利益の推移</div>
   <div class="charts-row">
     <div class="chart-card">
-      <div class="chart-title">💰 精算ごとのJRE受取利益（累計）</div>
+      <div class="chart-title">💰 精算ごとのJRE受取利益（各回の金額）</div>
       <canvas id="waterfallChart" height="200"></canvas>
     </div>
     <div class="chart-card">
@@ -510,12 +510,13 @@ function renderKPI() {
    Charts
    ═══════════ */
 function renderCharts() {
-  let cum = 0;
-  const wfLabels = [], wfData = [];
+  const wfLabels = [], wfData = [], wfColors = [];
+  let cumulative = 0;
   D.settlements.forEach((s,i) => {
-    cum += s.jre_distribution;
-    wfLabels.push(`第${i+1}回\n${s.date.slice(0,7)}`);
-    wfData.push(cum);
+    wfLabels.push(`第${i+1}回\n${s.date.slice(0,7)}\n(${s.vehicles.length}台)`);
+    wfData.push(s.jre_distribution);
+    cumulative += s.jre_distribution;
+    wfColors.push(`hsla(${140-i*12},60%,${42+i*5}%,0.88)`);
   });
 
   new Chart(document.getElementById('waterfallChart'),{
@@ -523,15 +524,26 @@ function renderCharts() {
     data:{
       labels:wfLabels,
       datasets:[{
-        label:'JRE累計利益',
+        label:'JRE受取利益',
         data:wfData,
-        backgroundColor:wfData.map((_,i)=>`hsla(${140-i*12},58%,${40+i*5}%,0.85)`),
-        borderRadius:8, borderWidth:0,
+        backgroundColor:wfColors,
+        borderRadius:10, borderWidth:0,
       }]
     },
     options:{
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` 累計 ${yen(ctx.raw)}`}}},
-      scales:{y:{ticks:{callback:v=>'¥'+Math.round(v/1000)+'k'}}}
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>{
+          const s=D.settlements[ctx.dataIndex];
+          return [` JRE受取: ${yen(ctx.raw)}`, ` 粗利益: ${yen(s.gross_profit)}`, ` 元金: ${yen(s.principal)}`];
+        }}}
+      },
+      scales:{
+        y:{
+          ticks:{callback:v=>v===0?'0円':Math.round(v/10000)+'万円'},
+          grid:{color:'rgba(0,0,0,0.06)'}
+        }
+      }
     }
   });
 
@@ -557,7 +569,10 @@ function renderCharts() {
         const roi=v?.profit&&v?.purchase_price?(v.profit/v.purchase_price*100).toFixed(0):'-';
         return ` JRE ${yen(ctx.raw)}  ROI ${roi}%`;
       }}}},
-      scales:{x:{ticks:{callback:v=>'¥'+Math.round(v/1000)+'k'}}}
+      scales:{x:{
+        ticks:{callback:v=>v===0?'0円':Math.round(v/10000)+'万円', stepSize:50000},
+        grid:{color:'rgba(0,0,0,0.06)'}
+      }}
     }
   });
 }
