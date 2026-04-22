@@ -26,187 +26,146 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body {
-  font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
+body { font-family: 'Segoe UI','Yu Gothic UI','Meiryo',sans-serif; background: var(--bg); color: var(--text); }
 
 /* ── Header ── */
 header {
   background: linear-gradient(135deg, var(--navy) 0%, #1a4080 60%, var(--blue) 100%);
-  padding: 0;
   position: sticky; top: 0; z-index: 100;
   box-shadow: 0 2px 16px rgba(0,0,0,.35);
 }
-.header-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 32px;
-}
+.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; }
 .header-title { color: #fff; }
-.header-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.3px; }
+.header-title h1 { font-size: 1.25rem; font-weight: 800; }
 .header-title .sub { font-size: 0.72rem; opacity: .65; margin-top: 2px; }
 .header-meta { text-align: right; color: rgba(255,255,255,.6); font-size: 0.72rem; line-height: 1.6; }
 
 /* ── Layout ── */
-.page { max-width: 1440px; margin: 0 auto; padding: 24px 28px 48px; }
-
-/* ── Section title ── */
+.page { max-width: 1440px; margin: 0 auto; padding: 24px 28px 60px; }
 .sec-label {
   display: flex; align-items: center; gap: 10px;
   font-size: 1.05rem; font-weight: 800; color: var(--navy);
-  margin-bottom: 16px; margin-top: 32px;
+  margin-bottom: 16px; margin-top: 36px;
 }
 .sec-label:first-child { margin-top: 0; }
 .sec-label::before {
-  content: ''; display: block;
-  width: 4px; height: 22px; border-radius: 3px;
+  content: ''; display: block; width: 4px; height: 22px; border-radius: 3px;
   background: linear-gradient(180deg, var(--sky), var(--blue));
 }
 
-/* ── Card base ── */
-.card {
-  background: var(--card);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 24px;
+/* ══════════════════════════════════
+   300万 2段セクション
+   ══════════════════════════════════ */
+.tiers-wrap { display: flex; flex-direction: column; gap: 16px; }
+
+/* --- Tier base --- */
+.tier {
+  border-radius: 20px; padding: 28px 32px; color: white;
+  box-shadow: 0 8px 28px rgba(15,43,78,.28);
 }
+.tier-1 { background: linear-gradient(135deg, #0c2340 0%, #1a4a90 100%); }
+.tier-2 { background: linear-gradient(135deg, #13302a 0%, #1a5c42 100%); }
+
+.tier-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 20px; padding: 4px 14px;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: .5px;
+  margin-bottom: 14px;
+}
+.tier-tag.t1 { background: rgba(245,166,35,.2); border: 1px solid rgba(245,166,35,.45); color: #ffd27d; }
+.tier-tag.t2 { background: rgba(46,204,113,.15); border: 1px solid rgba(46,204,113,.35); color: #7deba5; }
+
+.tier-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+.tier-headline { font-size: 2.1rem; font-weight: 900; line-height: 1; }
+.tier-headline span { font-size: 1rem; font-weight: 500; opacity: .6; display: block; margin-bottom: 4px; }
+.tier-total-label { font-size: 0.72rem; opacity: .5; text-align: right; }
+.tier-total-val { font-size: 1.3rem; font-weight: 800; opacity: .85; text-align: right; }
+
+/* --- 分割バー --- */
+.split-bar-track {
+  height: 40px; border-radius: 12px; overflow: hidden; display: flex;
+  background: rgba(255,255,255,.08);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.25);
+  margin-bottom: 14px;
+}
+.split-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 800; white-space: nowrap;
+  overflow: hidden; padding: 0 10px; transition: width .7s ease;
+  gap: 4px;
+}
+.seg-stock  { background: linear-gradient(90deg,#c0392b,#e67e22); }
+.seg-sold   { background: linear-gradient(90deg,#d35400,#f39c12); }
+.seg-cash   { background: linear-gradient(90deg,#1a6fa8,#74b9ff); }
+.seg-profit { background: linear-gradient(90deg,#1e8449,#2ecc71); }
+
+.split-legend { display: flex; gap: 20px; flex-wrap: wrap; }
+.sl-item { display: flex; align-items: center; gap: 8px; }
+.sl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.sl-label { font-size: 0.75rem; opacity: .65; }
+.sl-val { font-size: 0.88rem; font-weight: 800; }
+.sl-pct { font-size: 0.68rem; opacity: .45; margin-left: 3px; }
+
+/* --- 利益別勘定 --- */
+.profit-ledger {
+  background: linear-gradient(135deg,#111827,#1e293b);
+  border-radius: 20px; padding: 24px 32px; color: white;
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  border: 1px solid rgba(39,174,96,.25);
+}
+.pl-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.pl-title { font-size: 0.92rem; font-weight: 800; color: #7deba5; display: flex; align-items: center; gap: 8px; }
+.pl-note { font-size: 0.7rem; opacity: .4; }
+.pl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; }
+.pl-card {
+  background: rgba(255,255,255,.06); border-radius: 12px;
+  padding: 16px 18px; border-left: 3px solid rgba(46,204,113,.55);
+}
+.pl-card-label { font-size: 0.7rem; opacity: .6; margin-bottom: 5px; }
+.pl-card-val { font-size: 1.2rem; font-weight: 900; color: #2ecc71; line-height: 1; }
+.pl-card-sub { font-size: 0.68rem; opacity: .4; margin-top: 4px; }
+.pl-card.pending { border-left-color: rgba(241,196,15,.5); }
+.pl-card.pending .pl-card-val { color: var(--yellow); }
 
 /* ══════════════════════
-   SECTION 1: 300万ゾーン
+   KPI Strip
    ══════════════════════ */
-.money-zone {
-  background: linear-gradient(135deg, var(--navy) 0%, #1e4a8a 100%);
-  border-radius: 20px;
-  padding: 32px;
-  color: white;
-  box-shadow: 0 8px 32px rgba(15,43,78,0.35);
-}
-.money-zone-title {
-  font-size: 1rem; font-weight: 700; opacity: .75;
-  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
-}
-.money-zone-headline {
-  font-size: 2.4rem; font-weight: 900; line-height: 1;
-  color: var(--gold); margin-bottom: 4px;
-}
-.money-zone-sub { font-size: 0.8rem; opacity: .6; margin-bottom: 28px; }
-
-.money-flow {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 32px;
-}
-.money-box {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 14px;
-  padding: 20px 16px;
-  text-align: center;
-  transition: transform .2s;
-  position: relative;
-}
-.money-box:not(:last-child)::after {
-  content: '→';
-  position: absolute;
-  right: -18px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.1rem;
-  opacity: 0.35;
-  z-index: 1;
-}
-.money-box:hover { transform: translateY(-3px); }
-.money-box-icon { font-size: 2rem; margin-bottom: 8px; }
-.money-box-label { font-size: 0.72rem; opacity: .65; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-.money-box-val { font-size: 1.35rem; font-weight: 800; color: white; }
-.money-box-val.gold { color: var(--gold); }
-.money-box-val.green { color: var(--green-light); }
-.money-box-val.orange { color: #ff9f43; }
-.money-box-val.sky { color: #74b9ff; }
-.money-box-sub { font-size: 0.7rem; opacity: .5; margin-top: 4px; }
-.money-arrow { display: none; }
-
-/* Donut + bars row */
-.money-viz {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 32px;
-  align-items: center;
-}
-.donut-wrap { position: relative; }
-.donut-center {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center; pointer-events: none;
-}
-.donut-center-val { font-size: 1.4rem; font-weight: 900; color: white; }
-.donut-center-label { font-size: 0.65rem; opacity: .6; margin-top: 2px; }
-.donut-legend { display: flex; flex-direction: column; gap: 10px; }
-.legend-item { display: flex; align-items: center; gap: 10px; }
-.legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-.legend-info { flex: 1; }
-.legend-label { font-size: 0.78rem; opacity: .75; }
-.legend-val { font-size: 0.95rem; font-weight: 700; }
-.legend-pct { font-size: 0.7rem; opacity: .5; margin-left: 6px; }
-
-/* ══════════════════
-   SECTION 2: KPI strip
-   ══════════════════ */
-.kpi-strip {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-}
+.kpi-strip { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
 .kpi {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 18px 20px;
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
+  background: var(--card); border-radius: 14px; padding: 18px 20px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
 }
-.kpi::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px;
-}
-.kpi.k-gold::after { background: var(--gold); }
-.kpi.k-green::after { background: var(--green); }
-.kpi.k-blue::after { background: var(--sky); }
+.kpi::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+.kpi.k-gold::after   { background: var(--gold); }
+.kpi.k-green::after  { background: var(--green); }
+.kpi.k-blue::after   { background: var(--sky); }
 .kpi.k-orange::after { background: var(--orange); }
 .kpi.k-purple::after { background: var(--purple); }
 .kpi-emoji { font-size: 1.5rem; margin-bottom: 8px; }
 .kpi-label { font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 .kpi-value { font-size: 1.5rem; font-weight: 900; margin: 4px 0; line-height: 1; }
-.kpi-value.gold { color: var(--gold); }
-.kpi-value.green { color: var(--green); }
-.kpi-value.blue { color: var(--blue); }
+.kpi-value.gold   { color: var(--gold); }
+.kpi-value.green  { color: var(--green); }
+.kpi-value.blue   { color: var(--blue); }
 .kpi-value.orange { color: var(--orange); }
 .kpi-value.purple { color: var(--purple); }
 .kpi-sub { font-size: 0.7rem; color: var(--muted); }
 
 /* ══════════════════════
-   SECTION 3: Charts row
+   Charts row
    ══════════════════════ */
-.charts-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .chart-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 24px; }
-.chart-title { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.chart-title { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
 
 /* ══════════════════════
-   SECTION 4: Vehicle Table
+   Vehicle Table
    ══════════════════════ */
 .table-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
-.table-toolbar {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 16px 20px; border-bottom: 1px solid var(--border);
-}
+.table-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 16px 20px; border-bottom: 1px solid var(--border); }
 .table-toolbar-title { font-size: 0.9rem; font-weight: 800; color: var(--navy); flex: 1; }
 .pill {
   padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--border);
@@ -215,56 +174,30 @@ header {
 }
 .pill:hover { border-color: var(--blue); color: var(--blue); }
 .pill.on { background: var(--navy); color: white; border-color: var(--navy); }
-
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-thead th {
-  background: var(--navy); color: rgba(255,255,255,.9);
-  padding: 10px 14px; text-align: left; white-space: nowrap;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: .3px;
-}
+thead th { background: var(--navy); color: rgba(255,255,255,.9); padding: 10px 14px; text-align: left; white-space: nowrap; font-size: 0.72rem; font-weight: 700; }
 thead th.r { text-align: right; }
 tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 tbody td.r { text-align: right; font-variant-numeric: tabular-nums; }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: #f6faff; }
-.profit-cell { font-weight: 800; }
-.profit-cell.pos { color: var(--green); }
-.profit-cell.neg { color: var(--red); }
-
-/* Status badge */
-.badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 10px; border-radius: 20px;
-  font-size: 0.7rem; font-weight: 700; white-space: nowrap;
-}
-.s-settled  { background: #d5f5e3; color: #1e8449; }
-.s-principal{ background: #fef9e7; color: #d35400; border: 1px solid #f5cba7; }
-.s-sold     { background: #fde8d0; color: #a04000; }
-.s-stock    { background: #fde8e8; color: #922b21; }
-
-/* ROI bar inline */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+.s-settled   { background: #d5f5e3; color: #1e8449; }
+.s-principal { background: #fef9e7; color: #d35400; border: 1px solid #f5cba7; }
+.s-sold      { background: #fde8d0; color: #a04000; }
+.s-stock     { background: #fde8e8; color: #922b21; }
+.profit-cell.pos { color: var(--green); font-weight: 800; }
 .roi-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.roi-bar { height: 6px; border-radius: 3px; min-width: 4px; transition: width .4s; }
-.roi-txt { font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+.roi-bar { height: 6px; border-radius: 3px; min-width: 4px; }
+.roi-txt { font-size: 0.78rem; font-weight: 700; }
 
 /* ══════════════════════
-   SECTION 5: Settlement cards
+   Settlement cards
    ══════════════════════ */
-.settle-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-.settle-card {
-  background: var(--card);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  padding: 20px;
-  border-top: 4px solid var(--green);
-  position: relative;
-}
-.settle-card.total { border-top-color: var(--gold); background: linear-gradient(135deg, #fffbf0, #fff); }
+.settle-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 16px; }
+.settle-card { background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 20px; border-top: 4px solid var(--green); position: relative; }
+.settle-card.total { border-top-color: var(--gold); background: linear-gradient(135deg,#fffbf0,#fff); }
 .settle-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
 .settle-label { font-size: 0.88rem; font-weight: 800; color: var(--navy); margin-bottom: 14px; }
 .settle-line { display: flex; justify-content: space-between; font-size: 0.8rem; margin: 5px 0; }
@@ -272,42 +205,31 @@ tbody tr:hover td { background: #f6faff; }
 .settle-line .rv { font-weight: 700; }
 .settle-divider { border: none; border-top: 1px dashed var(--border); margin: 10px 0; }
 .settle-total-val { font-size: 1.15rem; font-weight: 900; color: var(--green); }
-.settle-check { position: absolute; top: 12px; right: 14px; font-size: 1rem; }
+.settle-check { position: absolute; top: 12px; right: 14px; }
 
-/* Timeline */
-.timeline { padding: 8px 0; }
-.tl-item { display: flex; gap: 16px; margin-bottom: 20px; position: relative; }
-.tl-item:not(:last-child)::before {
-  content: ''; position: absolute;
-  left: 19px; top: 38px; bottom: -20px;
-  width: 2px; background: var(--border);
-}
-.tl-dot {
-  width: 38px; height: 38px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1;
-  box-shadow: 0 2px 8px rgba(0,0,0,.12);
-}
+/* ══════════════════════
+   Timeline
+   ══════════════════════ */
+.card { background: var(--card); border-radius: 12px; box-shadow: var(--shadow); padding: 24px; }
+.timeline { padding: 4px 0; }
+.tl-item { display: flex; gap: 16px; margin-bottom: 18px; position: relative; }
+.tl-item:not(:last-child)::before { content: ''; position: absolute; left: 19px; top: 38px; bottom: -18px; width: 2px; background: var(--border); }
+.tl-dot { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
 .tl-dot.buy  { background: #ebf5fb; border: 2px solid var(--sky); }
 .tl-dot.sell { background: #d5f5e3; border: 2px solid var(--green); }
-.tl-dot.pend { background: #fef9e7; border: 2px solid var(--gold); }
 .tl-body { flex: 1; padding-top: 6px; }
 .tl-date { font-size: 0.7rem; color: var(--muted); }
 .tl-name { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
 .tl-detail { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
 
 /* Responsive */
-@media (max-width: 1100px) {
-  .money-flow { grid-template-columns: 1fr 40px 1fr 40px 1fr 40px 1fr; }
-  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
-}
+@media (max-width: 1100px) { .kpi-strip { grid-template-columns: repeat(3,1fr); } }
 @media (max-width: 800px) {
   .page { padding: 16px; }
-  .money-flow { grid-template-columns: 1fr; }
-  .money-arrow { display: none; }
-  .money-viz { grid-template-columns: 1fr; }
   .charts-row { grid-template-columns: 1fr; }
-  .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  .kpi-strip { grid-template-columns: repeat(2,1fr); }
+  .tier { padding: 20px 18px; }
+  .split-legend { gap: 12px; }
 }
 </style>
 </head>
@@ -325,35 +247,59 @@ tbody tr:hover td { background: #f6faff; }
 
 <div class="page">
 
-  <!-- ━━━ 300万円の今 ━━━ -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       300万円の今どこにある？2段表示
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
   <div class="sec-label">💴 300万円の今どこにある？</div>
 
-  <div class="money-zone">
-    <div class="money-zone-title">投資元本 追跡レポート</div>
-    <div class="money-zone-headline" id="totalAsset">¥—</div>
-    <div class="money-zone-sub" id="totalAssetSub">読み込み中…</div>
+  <div class="tiers-wrap">
 
-    <div class="money-flow" id="moneyFlow">
-      <!-- JS fill -->
-    </div>
-
-    <div class="money-viz">
-      <div class="donut-wrap" style="width:200px;height:200px;">
-        <canvas id="donutChart" width="200" height="200"></canvas>
-        <div class="donut-center">
-          <div class="donut-center-val" id="donutCenter">¥3M</div>
-          <div class="donut-center-label">総資産</div>
+    <!-- 1段目: 元本300万のみ -->
+    <div class="tier tier-1" id="tier1">
+      <div class="tier-tag t1">⭐ 1段目：元本300万円のみで運用（メインプラン）</div>
+      <div class="tier-top">
+        <div>
+          <div class="tier-headline" id="t1headline">
+            <span>元本ベース総額</span>¥3,000,000
+          </div>
+        </div>
+        <div>
+          <div class="tier-total-label">利益は別勘定</div>
+          <div class="tier-total-val" id="t1profit">JRE利益 ¥—</div>
         </div>
       </div>
-      <div class="donut-legend" id="donutLegend"></div>
+      <div class="split-bar-track" id="t1bar"></div>
+      <div class="split-legend" id="t1legend"></div>
     </div>
-  </div>
+
+    <!-- 2段目: 利益込み -->
+    <div class="tier tier-2" id="tier2">
+      <div class="tier-tag t2">📈 2段目：利益も込みで運用した場合（参考値）</div>
+      <div class="tier-top">
+        <div>
+          <div class="tier-headline" id="t2headline">
+            <span>利益再投資ベース総額</span>¥—
+          </div>
+        </div>
+        <div>
+          <div class="tier-total-label">元本比増加額</div>
+          <div class="tier-total-val" id="t2growth">+¥—</div>
+        </div>
+      </div>
+      <div class="split-bar-track" id="t2bar"></div>
+      <div class="split-legend" id="t2legend"></div>
+    </div>
+
+  </div><!-- /tiers-wrap -->
+
+  <!-- ━━━ 利益別勘定 ━━━ -->
+  <div class="profit-ledger" style="margin-top:16px" id="profitLedger"></div>
 
   <!-- ━━━ KPIストリップ ━━━ -->
   <div class="sec-label">📊 主要指標</div>
   <div class="kpi-strip" id="kpiStrip"></div>
 
-  <!-- ━━━ チャート2列 ━━━ -->
+  <!-- ━━━ グラフ2列 ━━━ -->
   <div class="sec-label">📈 グラフで見る利益の推移</div>
   <div class="charts-row">
     <div class="chart-card">
@@ -371,11 +317,11 @@ tbody tr:hover td { background: #f6faff; }
   <div class="table-card">
     <div class="table-toolbar">
       <span class="table-toolbar-title">全車両データ</span>
-      <button class="pill on" onclick="setF('all')">全 件</button>
+      <button class="pill on" onclick="setF('all')">全件</button>
       <button class="pill" onclick="setF('settled')">✅ 精算完了</button>
       <button class="pill" onclick="setF('principal_returned')">💛 利益精算待ち</button>
       <button class="pill" onclick="setF('sold_pending')">🟠 入金待ち</button>
-      <button class="pill" onclick="setF('in_stock')">🔴 在 庫</button>
+      <button class="pill" onclick="setF('in_stock')">🔴 在庫</button>
     </div>
     <div class="table-wrap">
       <table>
@@ -384,7 +330,7 @@ tbody tr:hover td { background: #f6faff; }
             <th>No</th><th>ステータス</th><th>車種</th><th>年式</th><th>色</th>
             <th class="r">走行(km)</th><th>仕入日</th><th class="r">仕入価格</th>
             <th class="r">諸経費</th><th>売却日</th><th class="r">販売価格</th>
-            <th class="r">粗利益</th><th class="r">JRE取り分(40%)</th>
+            <th class="r">粗利益</th><th class="r">JRE(40%)</th>
             <th>ROI</th><th>元金回収日</th><th>精算日</th>
           </tr>
         </thead>
@@ -393,7 +339,7 @@ tbody tr:hover td { background: #f6faff; }
     </div>
   </div>
 
-  <!-- ━━━ 精算カード ━━━ -->
+  <!-- ━━━ 精算記録 ━━━ -->
   <div class="sec-label">💳 精算記録</div>
   <div class="settle-row" id="settleRow"></div>
 
@@ -403,7 +349,7 @@ tbody tr:hover td { background: #f6faff; }
     <div class="timeline" id="timeline"></div>
   </div>
 
-</div><!-- /page -->
+</div>
 
 <script>
 let D = null, filterCurrent = 'all';
@@ -416,12 +362,11 @@ async function init() {
   renderAll();
 }
 
-/* ── helpers ── */
-const yen = n => n == null ? '—' : '¥' + Number(n).toLocaleString('ja-JP');
-const num = n => n == null ? '—' : Number(n).toLocaleString('ja-JP');
-const fd  = s => s ? s.replace(/-/g, '/') : '—';
+const yen = n => n==null ? '—' : '¥'+Number(n).toLocaleString('ja-JP');
+const num = n => n==null ? '—' : Number(n).toLocaleString('ja-JP');
+const fd  = s => s ? s.replace(/-/g,'/') : '—';
+const pct = (v,t) => t ? (v/t*100).toFixed(1) : 0;
 
-/* ── Status ── */
 const BADGE = {
   settled:           ['s-settled',   '✅ 精算完了'],
   principal_returned:['s-principal', '💛 利益精算待ち'],
@@ -429,124 +374,128 @@ const BADGE = {
   in_stock:          ['s-stock',     '🔴 在庫'],
 };
 function badge(st) {
-  const [cls, lbl] = BADGE[st] || ['',''];
+  const [cls,lbl] = BADGE[st] || ['',''];
   return `<span class="badge ${cls}">${lbl}</span>`;
 }
 
-/* ━━━━━━━━━━━━━━━
-   300万円の今
-   ━━━━━━━━━━━━━━━ */
-function renderMoneyZone() {
+/* ═══════════════════════════
+   2段 分割バー
+   ═══════════════════════════ */
+function renderTiers() {
   const vs = D.vehicles;
-  const init = D.meta.initial_investment;
-  const totalJRE = D.settlements.reduce((s, x) => s + x.jre_distribution, 0);
+  const init = D.meta.initial_investment;          // 3,000,000
+  const totalJRE = D.settlements.reduce((s,x)=>s+x.jre_distribution,0); // 593,354
 
-  /* 在庫中の元金（入金待ち含む） */
-  const activePrincipal = vs
-    .filter(v => ['in_stock','sold_pending'].includes(v.status))
-    .reduce((s, v) => s + v.purchase_price, 0);
+  /* 在庫中（売れていない / 入金待ち）の元金 */
+  const stockPrincipal = vs
+    .filter(v => v.status==='in_stock')
+    .reduce((s,v)=>s+v.purchase_price, 0);
+  const soldPendingPrincipal = vs
+    .filter(v => v.status==='sold_pending')
+    .reduce((s,v)=>s+v.purchase_price, 0);
+  const activePrincipal = stockPrincipal + soldPendingPrincipal;
 
-  /* 利益精算待ち（元金は戻っているが利益未受取） */
-  const pendingProfit = vs
-    .filter(v => v.status === 'principal_returned')
-    .length;
+  /* ─── 1段目: 元本300万のみ ─── */
+  const t1cash = init - activePrincipal;  // 手元現金余力（元本ベース）
+  const t1total = init;                   // 常に300万
 
-  /* 手元現金余力 ＝ 初期投資 + 確定利益受取済 − 在庫中元金 */
-  const cashBuffer = init + totalJRE - activePrincipal;
-  const totalAsset = init + totalJRE;
+  document.getElementById('t1profit').textContent = `JRE確定利益 ${yen(totalJRE)}（別勘定）`;
 
-  document.getElementById('totalAsset').textContent = yen(totalAsset);
-  document.getElementById('totalAssetSub').textContent =
-    `初期投資 ${yen(init)} ＋ 確定利益受取 ${yen(totalJRE)}`;
-  document.getElementById('donutCenter').textContent = yen(totalAsset).replace('¥','¥');
+  buildBar('t1bar', [
+    { label:'🚗 在庫中', val: stockPrincipal,       pct: pct(stockPrincipal,t1total),       cls:'seg-stock',  dot:'#e67e22' },
+    { label:'🔶 入金待ち', val: soldPendingPrincipal, pct: pct(soldPendingPrincipal,t1total),  cls:'seg-sold',   dot:'#f39c12' },
+    { label:'💵 現金余力', val: t1cash,               pct: pct(t1cash,t1total),               cls:'seg-cash',   dot:'#74b9ff' },
+  ], 't1legend', t1total);
 
-  /* フロー */
-  document.getElementById('moneyFlow').innerHTML = `
-    <div class="money-box">
-      <div class="money-box-icon">💼</div>
-      <div class="money-box-label">初期投資</div>
-      <div class="money-box-val gold">${yen(init)}</div>
-      <div class="money-box-sub">2025/11/12 スタート</div>
+  /* ─── 2段目: 利益込み ─── */
+  const t2total = init + totalJRE;        // 3,593,354
+  const t2cash  = t2total - activePrincipal;
+
+  document.getElementById('t2headline').innerHTML =
+    `<span>利益再投資ベース総額</span>${yen(t2total)}`;
+  document.getElementById('t2growth').textContent =
+    `+${yen(totalJRE)} (ROI ${(totalJRE/init*100).toFixed(1)}%)`;
+
+  buildBar('t2bar', [
+    { label:'🚗 在庫中', val: stockPrincipal,       pct: pct(stockPrincipal,t2total),       cls:'seg-stock',  dot:'#e67e22' },
+    { label:'🔶 入金待ち', val: soldPendingPrincipal, pct: pct(soldPendingPrincipal,t2total),  cls:'seg-sold',   dot:'#f39c12' },
+    { label:'💵 現金余力', val: t2cash,               pct: pct(t2cash,t2total),               cls:'seg-cash',   dot:'#74b9ff' },
+    { label:'📈 受取利益分', val: totalJRE,            pct: pct(totalJRE,t2total),             cls:'seg-profit', dot:'#2ecc71' },
+  ], 't2legend', t2total);
+
+  /* ─── 利益別勘定 ─── */
+  const pendingVehicles = vs.filter(v=>v.status==='principal_returned');
+  document.getElementById('profitLedger').innerHTML = `
+    <div class="pl-header">
+      <div class="pl-title">💹 利益 別勘定台帳（元本300万とは分けて管理）</div>
+      <div class="pl-note">元本の運用とは別計上</div>
     </div>
-    <div class="money-box">
-      <div class="money-box-icon">🚗</div>
-      <div class="money-box-label">在庫中の元金</div>
-      <div class="money-box-val orange">${yen(activePrincipal)}</div>
-      <div class="money-box-sub">${vs.filter(v=>['in_stock','sold_pending'].includes(v.status)).length}台が稼働中</div>
-    </div>
-    <div class="money-box">
-      <div class="money-box-icon">💵</div>
-      <div class="money-box-label">手元現金余力</div>
-      <div class="money-box-val sky">${yen(cashBuffer)}</div>
-      <div class="money-box-sub">次の仕入れに使える</div>
-    </div>
-    <div class="money-box">
-      <div class="money-box-icon">📈</div>
-      <div class="money-box-label">JRE確定利益</div>
-      <div class="money-box-val green">${yen(totalJRE)}</div>
-      <div class="money-box-sub">${D.settlements.length}回精算済み</div>
-    </div>
-  `;
-
-  /* ドーナツ */
-  const donutData = [
-    { label: '在庫中の元金', val: activePrincipal, color: '#ff9f43' },
-    { label: '手元現金余力', val: cashBuffer,       color: '#74b9ff' },
-    { label: '受取済み利益(JRE)', val: totalJRE,   color: '#27ae60' },
-  ];
-  const pct = v => ((v / totalAsset) * 100).toFixed(1);
-
-  document.getElementById('donutLegend').innerHTML = donutData.map(d => `
-    <div class="legend-item">
-      <div class="legend-dot" style="background:${d.color}"></div>
-      <div class="legend-info">
-        <div class="legend-label">${d.label}</div>
-        <div class="legend-val">${yen(d.val)}<span class="legend-pct">${pct(d.val)}%</span></div>
+    <div class="pl-grid">
+      <div class="pl-card">
+        <div class="pl-card-label">JRE確定利益（受取済）</div>
+        <div class="pl-card-val">${yen(totalJRE)}</div>
+        <div class="pl-card-sub">${D.settlements.length}回精算 / ROI ${(totalJRE/init*100).toFixed(1)}%</div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-card-label">はやちゃん取り分（精算済）</div>
+        <div class="pl-card-val">${yen(D.settlements.reduce((s,x)=>s+x.gross_profit-x.jre_distribution,0))}</div>
+        <div class="pl-card-sub">粗利益の60%</div>
+      </div>
+      <div class="pl-card pending">
+        <div class="pl-card-label">利益精算待ち（${pendingVehicles.length}台）</div>
+        <div class="pl-card-val">確認中</div>
+        <div class="pl-card-sub">${pendingVehicles.map(v=>v.name).join('・')||'なし'}</div>
+      </div>
+      <div class="pl-card pending">
+        <div class="pl-card-label">入金待ち（売却済）</div>
+        <div class="pl-card-val">${yen(soldPendingPrincipal)}</div>
+        <div class="pl-card-sub">${vs.filter(v=>v.status==='sold_pending').map(v=>v.name).join('・')}</div>
       </div>
     </div>
-  `).join('');
-
-  new Chart(document.getElementById('donutChart'), {
-    type: 'doughnut',
-    data: {
-      labels: donutData.map(d => d.label),
-      datasets: [{
-        data: donutData.map(d => d.val),
-        backgroundColor: donutData.map(d => d.color),
-        borderWidth: 3,
-        borderColor: '#1e4a8a',
-        hoverOffset: 10,
-      }]
-    },
-    options: {
-      cutout: '68%',
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: { label: ctx => ` ${yen(ctx.raw)} (${pct(ctx.raw)}%)` }
-      }},
-    }
-  });
+  `;
 }
 
-/* ━━━━━━━━━━━━━━━
-   KPI Strip
-   ━━━━━━━━━━━━━━━ */
+function buildBar(barId, segs, legendId, total) {
+  const bar = document.getElementById(barId);
+  const legend = document.getElementById(legendId);
+
+  bar.innerHTML = segs.map(s => {
+    const p = Math.max(parseFloat(s.pct), 0);
+    const showLabel = p > 8;
+    return `<div class="split-seg ${s.cls}" style="width:${p}%">
+      ${showLabel ? `${s.label.split(' ')[0]} ${parseFloat(s.pct).toFixed(0)}%` : ''}
+    </div>`;
+  }).join('');
+
+  legend.innerHTML = segs.map(s => `
+    <div class="sl-item">
+      <div class="sl-dot" style="background:${s.dot}"></div>
+      <span class="sl-label">${s.label}</span>
+      <span class="sl-val">${yen(s.val)}</span>
+      <span class="sl-pct">(${parseFloat(s.pct).toFixed(1)}%)</span>
+    </div>
+  `).join('');
+}
+
+/* ═══════════
+   KPI
+   ═══════════ */
 function renderKPI() {
   const vs = D.vehicles;
-  const totalJRE = D.settlements.reduce((s,x) => s+x.jre_distribution, 0);
-  const totalGross = D.settlements.reduce((s,x) => s+x.gross_profit, 0);
-  const settled = vs.filter(v => v.status==='settled');
-  const active = vs.filter(v => v.status!=='settled');
-  const roi = (totalJRE / D.meta.initial_investment * 100).toFixed(1);
+  const totalJRE = D.settlements.reduce((s,x)=>s+x.jre_distribution,0);
+  const totalGross = D.settlements.reduce((s,x)=>s+x.gross_profit,0);
+  const settled = vs.filter(v=>v.status==='settled');
+  const active = vs.filter(v=>v.status!=='settled');
+  const roi = (totalJRE/D.meta.initial_investment*100).toFixed(1);
   const avgProfit = settled.length ? Math.round(settled.reduce((s,v)=>s+(v.profit||0),0)/settled.length) : 0;
 
   const items = [
-    { e:'💰', l:'JRE受取利益 累計', v: yen(totalJRE), s:`ROI ${roi}%`, vc:'gold', k:'k-gold'},
-    { e:'📦', l:'粗利益 累計（精算済）',v: yen(totalGross), s:`はやちゃん分 ${yen(Math.round(totalGross*0.6))}`, vc:'green', k:'k-green'},
-    { e:'🚙', l:'総取引台数',         v: vs.length+'台', s:`精算完了 ${settled.length}台`, vc:'blue', k:'k-blue'},
-    { e:'⏳', l:'運用中台数',          v: active.length+'台', s:`在庫・精算待ち含む`, vc:'orange', k:'k-orange'},
-    { e:'🏅', l:'1台あたり平均利益',    v: yen(avgProfit), s:`精算済み${settled.length}台の平均`, vc:'purple', k:'k-purple'},
+    {e:'💰',l:'JRE受取利益 累計',       v:yen(totalJRE),   s:`ROI ${roi}%`,               vc:'gold',   k:'k-gold'},
+    {e:'📦',l:'粗利益 累計（精算済）',    v:yen(totalGross), s:`はやちゃん分 ${yen(Math.round(totalGross*0.6))}`, vc:'green', k:'k-green'},
+    {e:'🚙',l:'総取引台数',             v:vs.length+'台',  s:`精算完了 ${settled.length}台`,vc:'blue',   k:'k-blue'},
+    {e:'⏳',l:'運用中台数',             v:active.length+'台',s:`在庫・精算待ち含む`,        vc:'orange', k:'k-orange'},
+    {e:'🏅',l:'1台あたり平均利益',       v:yen(avgProfit),  s:`精算済み${settled.length}台の平均`, vc:'purple', k:'k-purple'},
   ];
-
   document.getElementById('kpiStrip').innerHTML = items.map(i=>`
     <div class="kpi ${i.k}">
       <div class="kpi-emoji">${i.e}</div>
@@ -557,132 +506,105 @@ function renderKPI() {
   `).join('');
 }
 
-/* ━━━━━━━━━━━━━━━
-   チャート
-   ━━━━━━━━━━━━━━━ */
+/* ═══════════
+   Charts
+   ═══════════ */
 function renderCharts() {
-  /* 精算累計棒グラフ */
-  let cumulative = 0;
-  const wfLabels = [];
-  const wfData = [];
-  D.settlements.forEach((s, i) => {
-    cumulative += s.jre_distribution;
-    wfLabels.push(`第${i+1}回\n${s.date.substring(0,7)}`);
-    wfData.push(cumulative);
+  let cum = 0;
+  const wfLabels = [], wfData = [];
+  D.settlements.forEach((s,i) => {
+    cum += s.jre_distribution;
+    wfLabels.push(`第${i+1}回\n${s.date.slice(0,7)}`);
+    wfData.push(cum);
   });
 
-  new Chart(document.getElementById('waterfallChart'), {
-    type: 'bar',
-    data: {
-      labels: wfLabels,
-      datasets: [{
-        label: 'JRE累計利益',
-        data: wfData,
-        backgroundColor: wfData.map((_, i) => `hsla(${140 - i*15}, 60%, ${42 + i*4}%, 0.85)`),
-        borderRadius: 8,
-        borderWidth: 0,
+  new Chart(document.getElementById('waterfallChart'),{
+    type:'bar',
+    data:{
+      labels:wfLabels,
+      datasets:[{
+        label:'JRE累計利益',
+        data:wfData,
+        backgroundColor:wfData.map((_,i)=>`hsla(${140-i*12},58%,${40+i*5}%,0.85)`),
+        borderRadius:8, borderWidth:0,
       }]
     },
-    options: {
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` 累計 ${yen(ctx.raw)}` } }
-      },
-      scales: {
-        y: { ticks: { callback: v => '¥'+Math.round(v/1000)+'k' } }
-      }
+    options:{
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` 累計 ${yen(ctx.raw)}`}}},
+      scales:{y:{ticks:{callback:v=>'¥'+Math.round(v/1000)+'k'}}}
     }
   });
 
-  /* 利益ランキング横棒グラフ */
-  const settled = D.vehicles.filter(v => v.profit != null && v.profit > 0)
-    .sort((a,b) => b.jre_share - a.jre_share);
-  const colors = ['#27ae60','#2ecc71','#1abc9c','#16a085','#27ae60','#8e44ad','#2980b9'];
+  const settled = D.vehicles.filter(v=>v.profit!=null&&v.profit>0)
+    .sort((a,b)=>b.jre_share-a.jre_share);
+  const colors=['#27ae60','#2ecc71','#1abc9c','#16a085','#2980b9','#8e44ad','#e67e22'];
 
-  new Chart(document.getElementById('rankingChart'), {
-    type: 'bar',
-    data: {
-      labels: settled.map(v => v.name),
-      datasets: [{
-        label: 'JRE分配',
-        data: settled.map(v => v.jre_share),
-        backgroundColor: settled.map((_,i) => colors[i % colors.length] + 'cc'),
-        borderRadius: 6,
-        borderWidth: 0,
+  new Chart(document.getElementById('rankingChart'),{
+    type:'bar',
+    data:{
+      labels:settled.map(v=>v.name),
+      datasets:[{
+        label:'JRE分配',
+        data:settled.map(v=>v.jre_share),
+        backgroundColor:settled.map((_,i)=>colors[i%colors.length]+'cc'),
+        borderRadius:6, borderWidth:0,
       }]
     },
-    options: {
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` JRE ${yen(ctx.raw)} (ROI ${((D.vehicles.find(v=>v.name===ctx.label)?.profit||0)/D.vehicles.find(v=>v.name===ctx.label)?.purchase_price*100).toFixed(0)}%)` } }
-      },
-      scales: {
-        x: { ticks: { callback: v => '¥'+Math.round(v/1000)+'k' } }
-      }
+    options:{
+      indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+        const v=D.vehicles.find(x=>x.name===ctx.label);
+        const roi=v?.profit&&v?.purchase_price?(v.profit/v.purchase_price*100).toFixed(0):'-';
+        return ` JRE ${yen(ctx.raw)}  ROI ${roi}%`;
+      }}}},
+      scales:{x:{ticks:{callback:v=>'¥'+Math.round(v/1000)+'k'}}}
     }
   });
 }
 
-/* ━━━━━━━━━━━━━━━
-   取引台帳テーブル
-   ━━━━━━━━━━━━━━━ */
+/* ═══════════
+   Table
+   ═══════════ */
 function setF(f) {
   filterCurrent = f;
-  document.querySelectorAll('.pill').forEach(b =>
-    b.classList.toggle('on', b.textContent.includes({
-      all:'全', settled:'精算', principal_returned:'利益精算',
-      sold_pending:'入金待ち', in_stock:'在庫'
-    }[f]))
-  );
+  document.querySelectorAll('.pill').forEach(b => {
+    const map={all:'全件',settled:'精算',principal_returned:'精算待',sold_pending:'入金待',in_stock:'在庫'};
+    b.classList.toggle('on', b.textContent.trim().includes(map[f]||''));
+  });
   renderTable();
 }
 
 function renderTable() {
-  const vs = filterCurrent === 'all'
-    ? D.vehicles
-    : D.vehicles.filter(v => v.status === filterCurrent);
-
-  document.getElementById('vehicleTbody').innerHTML = vs.map(v => {
-    const roi = v.purchase_price && v.profit
-      ? (v.profit / v.purchase_price * 100).toFixed(0)
-      : null;
-    const roiBar = roi != null
+  const vs = filterCurrent==='all' ? D.vehicles : D.vehicles.filter(v=>v.status===filterCurrent);
+  document.getElementById('vehicleTbody').innerHTML = vs.map(v=>{
+    const roi = v.purchase_price&&v.profit ? (v.profit/v.purchase_price*100).toFixed(0) : null;
+    const bar = roi!=null
       ? `<div class="roi-bar-wrap">
            <div class="roi-bar" style="width:${Math.min(roi,80)}px;background:${roi>30?'#27ae60':roi>15?'#f39c12':'#e74c3c'}"></div>
            <span class="roi-txt" style="color:${roi>30?'#27ae60':roi>15?'#f39c12':'#e74c3c'}">${roi}%</span>
-         </div>`
-      : '—';
+         </div>` : '—';
     return `<tr>
-      <td>${v.no}</td>
-      <td>${badge(v.status)}</td>
-      <td><strong>${v.name}</strong></td>
-      <td>${v.year}</td>
-      <td>${v.color}</td>
-      <td class="r">${num(v.mileage)}</td>
-      <td>${fd(v.purchase_date)}</td>
-      <td class="r">${yen(v.purchase_price)}</td>
-      <td class="r">${yen(v.expenses)}</td>
-      <td>${fd(v.sale_date)}</td>
+      <td>${v.no}</td><td>${badge(v.status)}</td><td><strong>${v.name}</strong></td>
+      <td>${v.year}</td><td>${v.color}</td><td class="r">${num(v.mileage)}</td>
+      <td>${fd(v.purchase_date)}</td><td class="r">${yen(v.purchase_price)}</td>
+      <td class="r">${yen(v.expenses)}</td><td>${fd(v.sale_date)}</td>
       <td class="r">${yen(v.sale_price)}</td>
       <td class="r profit-cell ${v.profit>0?'pos':''}">${yen(v.profit)}</td>
       <td class="r profit-cell pos">${yen(v.jre_share)}</td>
-      <td>${roiBar}</td>
-      <td>${fd(v.principal_returned_date)}</td>
-      <td>${fd(v.settlement_date)}</td>
+      <td>${bar}</td><td>${fd(v.principal_returned_date)}</td><td>${fd(v.settlement_date)}</td>
     </tr>`;
   }).join('');
 }
 
-/* ━━━━━━━━━━━━━━━
-   精算カード
-   ━━━━━━━━━━━━━━━ */
+/* ═══════════
+   Settlements
+   ═══════════ */
 function renderSettlements() {
-  const totalPrincipal = D.settlements.reduce((s,x)=>s+x.principal,0);
-  const totalGross     = D.settlements.reduce((s,x)=>s+x.gross_profit,0);
-  const totalJRE       = D.settlements.reduce((s,x)=>s+x.jre_distribution,0);
+  const tP=D.settlements.reduce((s,x)=>s+x.principal,0);
+  const tG=D.settlements.reduce((s,x)=>s+x.gross_profit,0);
+  const tJ=D.settlements.reduce((s,x)=>s+x.jre_distribution,0);
 
-  const cards = D.settlements.map(s => `
+  document.getElementById('settleRow').innerHTML = D.settlements.map(s=>`
     <div class="settle-card">
       <span class="settle-check">✅</span>
       <div class="settle-date">${fd(s.date)}</div>
@@ -690,66 +612,48 @@ function renderSettlements() {
       <div class="settle-line"><span class="lv">元金</span><span class="rv">${yen(s.principal)}</span></div>
       <div class="settle-line"><span class="lv">粗利益</span><span class="rv">${yen(s.gross_profit)}</span></div>
       <hr class="settle-divider">
-      <div class="settle-line">
-        <span class="lv">JRE受取（40%）</span>
-        <span class="rv settle-total-val">${yen(s.jre_distribution)}</span>
-      </div>
+      <div class="settle-line"><span class="lv">JRE受取（40%）</span><span class="rv settle-total-val">${yen(s.jre_distribution)}</span></div>
     </div>
-  `).join('');
-
-  const total = `
+  `).join('') + `
     <div class="settle-card total">
       <span class="settle-check">🏆</span>
       <div class="settle-date">累計（全精算）</div>
       <div class="settle-label" style="color:var(--gold)">合計</div>
-      <div class="settle-line"><span class="lv">元金</span><span class="rv">${yen(totalPrincipal)}</span></div>
-      <div class="settle-line"><span class="lv">粗利益</span><span class="rv">${yen(totalGross)}</span></div>
+      <div class="settle-line"><span class="lv">元金</span><span class="rv">${yen(tP)}</span></div>
+      <div class="settle-line"><span class="lv">粗利益</span><span class="rv">${yen(tG)}</span></div>
       <hr class="settle-divider">
-      <div class="settle-line">
-        <span class="lv">JRE受取 累計</span>
-        <span class="rv settle-total-val" style="color:var(--gold)">${yen(totalJRE)}</span>
-      </div>
+      <div class="settle-line"><span class="lv">JRE累計</span><span class="rv settle-total-val" style="color:var(--gold)">${yen(tJ)}</span></div>
     </div>
   `;
-
-  document.getElementById('settleRow').innerHTML = cards + total;
 }
 
-/* ━━━━━━━━━━━━━━━
-   タイムライン
-   ━━━━━━━━━━━━━━━ */
+/* ═══════════
+   Timeline
+   ═══════════ */
 function renderTimeline() {
   const events = [];
-  D.vehicles.forEach(v => {
-    if (v.purchase_date) events.push({ date: v.purchase_date, type:'buy',  v });
-    if (v.sale_date && v.sale_date.length === 10) events.push({ date: v.sale_date, type:'sell', v });
+  D.vehicles.forEach(v=>{
+    if(v.purchase_date) events.push({date:v.purchase_date,type:'buy',v});
+    if(v.sale_date&&v.sale_date.length===10) events.push({date:v.sale_date,type:'sell',v});
   });
-  events.sort((a,b) => a.date > b.date ? -1 : 1);
-
-  document.getElementById('timeline').innerHTML = events.slice(0, 20).map(e => {
-    if (e.type === 'buy') return `
-      <div class="tl-item">
-        <div class="tl-dot buy">🛒</div>
-        <div class="tl-body">
-          <div class="tl-date">${fd(e.date)}</div>
-          <div class="tl-name">【仕入れ】${e.v.name} (${e.v.year})</div>
-          <div class="tl-detail">${e.v.color} / ${num(e.v.mileage)}km / ${yen(e.v.purchase_price)}</div>
-        </div>
-      </div>`;
-    return `
-      <div class="tl-item">
-        <div class="tl-dot sell">💰</div>
-        <div class="tl-body">
-          <div class="tl-date">${fd(e.date)}</div>
-          <div class="tl-name">【売却】${e.v.name} (${e.v.year})</div>
-          <div class="tl-detail">${e.v.sale_price ? yen(e.v.sale_price) + ' → 利益 ' + yen(e.v.profit) : '販売価格確認中'}</div>
-        </div>
-      </div>`;
-  }).join('');
+  events.sort((a,b)=>a.date>b.date?-1:1);
+  document.getElementById('timeline').innerHTML = events.slice(0,20).map(e=>`
+    <div class="tl-item">
+      <div class="tl-dot ${e.type==='buy'?'buy':'sell'}">${e.type==='buy'?'🛒':'💰'}</div>
+      <div class="tl-body">
+        <div class="tl-date">${fd(e.date)}</div>
+        <div class="tl-name">【${e.type==='buy'?'仕入れ':'売却'}】${e.v.name} (${e.v.year})</div>
+        <div class="tl-detail">${e.type==='buy'
+          ? `${e.v.color} / ${num(e.v.mileage)}km / ${yen(e.v.purchase_price)}`
+          : e.v.sale_price ? `${yen(e.v.sale_price)} → 利益 ${yen(e.v.profit)}` : '販売価格確認中'
+        }</div>
+      </div>
+    </div>
+  `).join('');
 }
 
 function renderAll() {
-  renderMoneyZone();
+  renderTiers();
   renderKPI();
   renderCharts();
   renderTable();
