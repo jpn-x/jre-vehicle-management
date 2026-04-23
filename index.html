@@ -242,6 +242,42 @@ tbody tr:hover td { background: #f6faff; }
   .tier { padding: 20px 18px; }
   .split-legend { gap: 12px; }
 }
+@media (max-width: 520px) {
+  /* Header */
+  .header-inner { padding: 10px 14px; gap: 10px; }
+  .header-title h1 { font-size: 0.9rem; }
+  .header-title .sub { font-size: 0.62rem; }
+
+  /* Page */
+  .page { padding: 12px 10px; }
+  .sec-label { font-size: 0.88rem; }
+
+  /* Tier: 左右並びを縦積みに */
+  .tier { padding: 16px 14px; border-radius: 14px; }
+  .tier-tag { font-size: 0.62rem; padding: 3px 10px; }
+  .tier-top { flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .tier-headline { font-size: 1.7rem; }
+  .tier-headline span { font-size: 0.78rem; }
+  .tier-total-label { text-align: left; font-size: 0.68rem; }
+  .tier-total-val { text-align: left; font-size: 1.05rem; }
+
+  /* 利益別勘定 */
+  .profit-ledger { padding: 16px 14px; border-radius: 14px; }
+  .pl-header { flex-direction: column; gap: 2px; align-items: flex-start; }
+  .pl-title { font-size: 0.8rem; }
+  .pl-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pl-card { padding: 12px; }
+  .pl-card-val { font-size: 1rem; }
+
+  /* KPI */
+  .kpi-strip { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi { padding: 14px; }
+  .kpi-value { font-size: 1.1rem; }
+  .kpi-label { font-size: 0.62rem; }
+
+  /* split legend 縦並び */
+  .split-legend { flex-direction: column; gap: 6px; }
+}
 </style>
 </head>
 <body>
