@@ -226,14 +226,18 @@ body {
 .bo { background: #fde8d0; color: #a04000; }
 .bk { background: #fde8e8; color: #922b21; }
 
-.vcard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.vcard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
 .vg-item { }
-.vg-lbl { font-size: 0.6rem; color: var(--muted); }
-.vg-val { font-size: 0.82rem; font-weight: 700; }
+.vg-lbl { font-size: 0.58rem; color: var(--muted); margin-bottom: 1px; }
+.vg-val { font-size: 0.8rem; font-weight: 700; }
 .vg-val.profit { color: var(--green); }
 .vg-val.jre    { color: var(--blue); }
+.vg-val.cost   { color: var(--orange); }
+.vcard-divider { border: none; border-top: 1px dashed var(--border); margin: 8px 0 6px; }
+.vcard-notes { font-size: 0.7rem; color: var(--muted); background: var(--bg); border-radius: 6px; padding: 6px 8px; margin-top: 6px; }
+.vcard-notes strong { color: var(--text); }
 
-.vcard-bar { margin-top: 10px; }
+.vcard-bar { margin-top: 8px; }
 .roi-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 3px; }
 .roi-fill { height: 100%; border-radius: 3px; transition: width .5s; }
 
@@ -520,26 +524,47 @@ function renderList() {
     const [sc,bc,bl] = STAT[v.status];
     const roi = v.purchase_price&&v.profit ? (v.profit/v.purchase_price*100).toFixed(0) : null;
     const roiColor = roi>30?'#27ae60':roi>15?'#f39c12':'#e74c3c';
+    const totalCost = v.purchase_price && v.expenses ? v.purchase_price + v.expenses : v.purchase_price;
     return `<div class="vcard ${sc}">
       <div class="vcard-top">
         <div>
-          <div class="vcard-name">${v.name}</div>
+          <div class="vcard-name">No.${v.no}　${v.name}</div>
           <div class="vcard-year">${v.year}・${v.color}・${num(v.mileage)}km</div>
         </div>
         <span class="badge-m ${bc}">${bl}</span>
       </div>
+
+      <!-- 仕入れ情報 -->
       <div class="vcard-grid">
-        <div class="vg-item"><div class="vg-lbl">仕入日</div><div class="vg-val">${fd(v.purchase_date)}</div></div>
-        <div class="vg-item"><div class="vg-lbl">仕入価格</div><div class="vg-val">${yen(v.purchase_price)}</div></div>
-        <div class="vg-item"><div class="vg-lbl">売却日</div><div class="vg-val">${fd(v.sale_date)}</div></div>
-        <div class="vg-item"><div class="vg-lbl">販売価格</div><div class="vg-val">${yen(v.sale_price)}</div></div>
-        <div class="vg-item"><div class="vg-lbl">粗利益</div><div class="vg-val profit">${yen(v.profit)}</div></div>
-        <div class="vg-item"><div class="vg-lbl">JRE取り分(40%)</div><div class="vg-val jre">${yen(v.jre_share)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">📅 仕入日</div><div class="vg-val">${fd(v.purchase_date)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">💴 仕入価格</div><div class="vg-val">${yen(v.purchase_price)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">🔧 諸経費</div><div class="vg-val cost">${yen(v.expenses)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">🧾 合計費用</div><div class="vg-val cost">${v.expenses ? yen(totalCost) : '—'}</div></div>
       </div>
+
+      <hr class="vcard-divider">
+
+      <!-- 売却情報 -->
+      <div class="vcard-grid">
+        <div class="vg-item"><div class="vg-lbl">🗓 売却日</div><div class="vg-val">${fd(v.sale_date)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">💰 販売価格</div><div class="vg-val">${yen(v.sale_price)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">📈 粗利益</div><div class="vg-val profit">${yen(v.profit)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">🏦 JRE取り分(40%)</div><div class="vg-val jre">${yen(v.jre_share)}</div></div>
+      </div>
+
+      <hr class="vcard-divider">
+
+      <!-- 精算情報 -->
+      <div class="vcard-grid">
+        <div class="vg-item"><div class="vg-lbl">🔁 元金返金日</div><div class="vg-val">${fd(v.principal_returned_date)}</div></div>
+        <div class="vg-item"><div class="vg-lbl">✅ 利益精算日</div><div class="vg-val">${fd(v.settlement_date)}</div></div>
+      </div>
+
       ${roi!=null?`<div class="vcard-bar">
         <div class="vg-lbl">ROI ${roi}%</div>
         <div class="roi-track"><div class="roi-fill" style="width:${Math.min(roi,100)}%;background:${roiColor}"></div></div>
       </div>`:''}
+      ${v.notes?`<div class="vcard-notes">📝 <strong>備考：</strong>${v.notes}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -605,13 +630,16 @@ function renderSettle() {
     if(v.sale_date&&v.sale_date.length===10) evs.push({date:v.sale_date,type:'sell',v});
   });
   evs.sort((a,b)=>a.date>b.date?-1:1);
-  document.getElementById('tl-m').innerHTML = evs.slice(0,16).map(e=>`
+  document.getElementById('tl-m').innerHTML = evs.map(e=>`
     <div class="tl-m">
       <div class="tl-dot-m ${e.type==='buy'?'buy':'sell'}">${e.type==='buy'?'🛒':'💰'}</div>
       <div class="tl-body-m">
         <div class="tl-date-m">${fd(e.date)}</div>
-        <div class="tl-name-m">【${e.type==='buy'?'仕入れ':'売却'}】${e.v.name}</div>
-        <div class="tl-det-m">${e.type==='buy'?yen(e.v.purchase_price):e.v.sale_price?yen(e.v.sale_price)+'→利益'+yen(e.v.profit):'確認中'}</div>
+        <div class="tl-name-m">【${e.type==='buy'?'仕入れ':'売却'}】${e.v.name} (${e.v.year})</div>
+        <div class="tl-det-m">${e.type==='buy'
+          ? `${e.v.color} / ${num(e.v.mileage)}km / ${yen(e.v.purchase_price)}`
+          : e.v.sale_price ? `${yen(e.v.sale_price)} → 利益 ${yen(e.v.profit)}` : '販売価格確認中'
+        }</div>
       </div>
     </div>
   `).join('');
