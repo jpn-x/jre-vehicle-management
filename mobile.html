@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script>
+  // PCでアクセスしたら自動的にPC版へ
+  (function(){
+    if(location.search.indexOf('noredirect')!==-1) return;
+    var ua = navigator.userAgent;
+    var isMobile = /iPhone|Android|iPad|iPod|Mobile/i.test(ua) || window.innerWidth < 768;
+    if(!isMobile) location.replace('index.html?noredirect=1');
+  })();
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f2b4e">
@@ -50,10 +59,11 @@ body {
 .header-left .sub { color: rgba(255,255,255,.55); font-size: 0.62rem; }
 .header-right { color: rgba(255,255,255,.7); font-size: 0.65rem; text-align: right; line-height: 1.5; }
 .pc-link {
-  display: inline-block; margin-top: 2px;
-  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
-  color: white; font-size: 0.6rem; font-weight: 700;
-  padding: 2px 8px; border-radius: 10px; text-decoration: none;
+  display: inline-block; margin-top: 4px;
+  background: #8B1A2A; border: 1.5px solid #b02236;
+  color: white; font-size: 0.65rem; font-weight: 800;
+  padding: 3px 10px; border-radius: 10px; text-decoration: none;
+  box-shadow: 0 2px 6px rgba(139,26,42,0.45);
 }
 
 /* ── Scrollable content ── */
@@ -273,7 +283,7 @@ body {
   </div>
   <div class="header-right">
     <div id="headerDate">読み込み中</div>
-    <a href="index.html" class="pc-link">💻 PC版</a>
+    <a href="index.html?noredirect=1" class="pc-link">💻 PC版</a>
   </div>
 </header>
 

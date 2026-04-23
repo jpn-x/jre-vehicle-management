@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JRE 車両売買管理</title>
+<script>
+  // モバイル端末でアクセスしたら自動的にモバイル版へ
+  (function(){
+    if(location.search.indexOf('noredirect')!==-1) return;
+    var ua = navigator.userAgent;
+    var isMobile = /iPhone|Android|iPad|iPod|Mobile/i.test(ua) || window.innerWidth < 768;
+    if(isMobile) location.replace('mobile.html?noredirect=1');
+  })();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -243,7 +252,7 @@ tbody tr:hover td { background: #f6faff; }
     </div>
     <div style="display:flex;align-items:center;gap:16px;">
       <div class="header-meta" id="headerMeta"></div>
-      <a href="mobile.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:6px 14px;color:#fff;text-decoration:none;font-size:0.78rem;font-weight:700;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">📱 モバイル版</a>
+      <a href="mobile.html?noredirect=1" style="display:inline-flex;align-items:center;gap:6px;background:#8B1A2A;border:2px solid #b02236;border-radius:20px;padding:6px 16px;color:#fff;text-decoration:none;font-size:0.78rem;font-weight:800;white-space:nowrap;transition:background .2s,transform .1s;box-shadow:0 2px 8px rgba(139,26,42,0.45);" onmouseover="this.style.background='#a01f31';this.style.transform='scale(1.04)'" onmouseout="this.style.background='#8B1A2A';this.style.transform='scale(1)'">📱 モバイル版</a>
     </div>
   </div>
 </header>
