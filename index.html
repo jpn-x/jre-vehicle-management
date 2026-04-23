@@ -381,7 +381,7 @@ tbody tr:hover td { background: #f6faff; }
             <th class="r">走行(km)</th><th>仕入日</th><th class="r">仕入価格</th>
             <th class="r">諸経費</th><th>売却日</th><th class="r">販売価格</th>
             <th class="r">粗利益</th><th class="r">JRE(40%)</th>
-            <th>ROI</th><th>元金回収日</th><th>精算日</th>
+            <th>利益率</th><th>元金回収日</th><th>精算日</th>
           </tr>
         </thead>
         <tbody id="vehicleTbody"></tbody>
@@ -464,7 +464,7 @@ function renderTiers() {
   document.getElementById('t2headline').innerHTML =
     `<span>利益再投資ベース総額</span>${yen(t2total)}`;
   document.getElementById('t2growth').textContent =
-    `+${yen(totalJRE)} (ROI ${(totalJRE/init*100).toFixed(1)}%)`;
+    `+${yen(totalJRE)} (利益率 ${(totalJRE/init*100).toFixed(1)}%)`;
 
   buildBar('t2bar', [
     { label:'🚗 在庫中', val: stockPrincipal,       pct: pct(stockPrincipal,t2total),       cls:'seg-stock',  dot:'#e67e22' },
@@ -484,7 +484,7 @@ function renderTiers() {
       <div class="pl-card">
         <div class="pl-card-label">JRE確定利益（受取済）</div>
         <div class="pl-card-val">${yen(totalJRE)}</div>
-        <div class="pl-card-sub">${D.settlements.length}回精算 / ROI ${(totalJRE/init*100).toFixed(1)}%</div>
+        <div class="pl-card-sub">${D.settlements.length}回精算 / 利益率 ${(totalJRE/init*100).toFixed(1)}%</div>
       </div>
       <div class="pl-card">
         <div class="pl-card-label">はやちゃん取り分（精算済）</div>
@@ -540,7 +540,7 @@ function renderKPI() {
   const avgProfit = settled.length ? Math.round(settled.reduce((s,v)=>s+(v.profit||0),0)/settled.length) : 0;
 
   const items = [
-    {e:'💰',l:'JRE受取利益 累計',       v:yen(totalJRE),   s:`ROI ${roi}%`,               vc:'gold',   k:'k-gold'},
+    {e:'💰',l:'JRE受取利益 累計',       v:yen(totalJRE),   s:`利益率 ${roi}%`,               vc:'gold',   k:'k-gold'},
     {e:'📦',l:'粗利益 累計（精算済）',    v:yen(totalGross), s:`はやちゃん分 ${yen(Math.round(totalGross*0.6))}`, vc:'green', k:'k-green'},
     {e:'🚙',l:'総取引台数',             v:vs.length+'台',  s:`精算完了 ${settled.length}台`,vc:'blue',   k:'k-blue'},
     {e:'⏳',l:'運用中台数',             v:active.length+'台',s:`在庫・精算待ち含む`,        vc:'orange', k:'k-orange'},
@@ -617,7 +617,7 @@ function renderCharts() {
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
         const v=D.vehicles.find(x=>x.name===ctx.label);
         const roi=v?.profit&&v?.purchase_price?(v.profit/v.purchase_price*100).toFixed(0):'-';
-        return ` JRE ${yen(ctx.raw)}  ROI ${roi}%`;
+        return ` JRE ${yen(ctx.raw)}  利益率 ${roi}%`;
       }}}},
       scales:{x:{
         ticks:{callback:v=>v===0?'0円':Math.round(v/10000)+'万円', stepSize:50000},

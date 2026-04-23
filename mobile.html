@@ -434,7 +434,7 @@ function renderHome() {
   // 2段目
   document.getElementById('t2val-m').textContent = yen(t2total);
   document.getElementById('t2sub-m').textContent =
-    `+${yen(totalJRE)} (ROI ${(totalJRE/init*100).toFixed(1)}%) ／ 現金余力 ${yen(t2cash)}`;
+    `+${yen(totalJRE)} (利益率 ${(totalJRE/init*100).toFixed(1)}%) ／ 現金余力 ${yen(t2cash)}`;
 
   // 利益別勘定
   const pendV = vs.filter(v=>v.status==='principal_returned');
@@ -444,7 +444,7 @@ function renderHome() {
       <div class="ledger-item">
         <div class="ledger-lbl">JRE確定利益</div>
         <div class="ledger-v">${yen(totalJRE)}</div>
-        <div class="ledger-s">ROI ${(totalJRE/init*100).toFixed(1)}%</div>
+        <div class="ledger-s">利益率 ${(totalJRE/init*100).toFixed(1)}%</div>
       </div>
       <div class="ledger-item">
         <div class="ledger-lbl">はやちゃん取り分</div>
@@ -469,7 +469,7 @@ function renderHome() {
   const avgP = settled.length ? Math.round(settled.reduce((s,v)=>s+(v.profit||0),0)/settled.length) : 0;
   const gross = D.settlements.reduce((s,x)=>s+x.gross_profit,0);
   const kpis = [
-    {e:'💰',l:'JRE受取利益',v:yen(totalJRE),s:`ROI ${(totalJRE/init*100).toFixed(1)}%`,c:'g'},
+    {e:'💰',l:'JRE受取利益',v:yen(totalJRE),s:`利益率 ${(totalJRE/init*100).toFixed(1)}%`,c:'g'},
     {e:'📦',l:'粗利益累計', v:yen(gross),   s:`はやちゃん ${yen(Math.round(gross*.6))}`,c:'gr'},
     {e:'🚙',l:'総取引台数', v:vs.length+'台',s:`精算完了 ${settled.length}台`,c:'b'},
     {e:'⏳',l:'運用中台数', v:(vs.length-settled.length)+'台',s:'在庫・精算待ち',c:'o'},
@@ -561,7 +561,7 @@ function renderList() {
       </div>
 
       ${roi!=null?`<div class="vcard-bar">
-        <div class="vg-lbl">ROI ${roi}%</div>
+        <div class="vg-lbl">利益率 ${roi}%</div>
         <div class="roi-track"><div class="roi-fill" style="width:${Math.min(roi,100)}%;background:${roiColor}"></div></div>
       </div>`:''}
       ${v.notes?`<div class="vcard-notes">📝 <strong>備考：</strong>${v.notes}</div>`:''}
