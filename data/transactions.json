@@ -5,7 +5,7 @@
     "investment_date": "2025-11-12",
     "profit_ratio_jre": 0.4,
     "profit_ratio_hayachyan": 0.6,
-    "last_updated": "2026-04-23"
+    "last_updated": "2026-04-24"
   },
   "settlements": [
     {
@@ -291,6 +291,48 @@
       "status": "in_stock",
       "settlement_id": null,
       "notes": "在庫中。R8.11まで車検付き"
+    },
+    {
+      "id": "V013",
+      "no": 13,
+      "name": "スペーシア",
+      "year": "H25",
+      "color": "グリーン2トン",
+      "mileage": 75937,
+      "purchase_date": "2026-04-24",
+      "purchase_price": 311770,
+      "expenses": null,
+      "total_cost": 311770,
+      "sale_date": null,
+      "sale_price": null,
+      "profit": null,
+      "jre_share": null,
+      "principal_returned_date": null,
+      "settlement_date": null,
+      "status": "in_stock",
+      "settlement_id": null,
+      "notes": "車検 R8.7。合計送金849,000円のうち差額74,910円は諸費用として確認中"
+    },
+    {
+      "id": "V014",
+      "no": 14,
+      "name": "エスティマ",
+      "year": "H18",
+      "color": "シルバー",
+      "mileage": 48618,
+      "purchase_date": "2026-04-24",
+      "purchase_price": 462320,
+      "expenses": null,
+      "total_cost": 462320,
+      "sale_date": null,
+      "sale_price": null,
+      "profit": null,
+      "jre_share": null,
+      "principal_returned_date": null,
+      "settlement_date": null,
+      "status": "in_stock",
+      "settlement_id": null,
+      "notes": "車検 R9.8"
     }
   ]
 }
