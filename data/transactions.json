@@ -300,9 +300,9 @@
       "color": "グリーン2トン",
       "mileage": 75937,
       "purchase_date": "2026-04-24",
-      "purchase_price": 311770,
+      "purchase_price": 341970,
       "expenses": null,
-      "total_cost": 311770,
+      "total_cost": 341970,
       "sale_date": null,
       "sale_price": null,
       "profit": null,
@@ -311,7 +311,7 @@
       "settlement_date": null,
       "status": "in_stock",
       "settlement_id": null,
-      "notes": "車検 R8.7。合計送金849,000円のうち差額74,910円は諸費用として確認中"
+      "notes": "車検 R8.7。落札311,770＋消費税30,200＝税込341,970円（USS大阪）"
     },
     {
       "id": "V014",
@@ -321,9 +321,9 @@
       "color": "シルバー",
       "mileage": 48618,
       "purchase_date": "2026-04-24",
-      "purchase_price": 462320,
+      "purchase_price": 507030,
       "expenses": null,
-      "total_cost": 462320,
+      "total_cost": 507030,
       "sale_date": null,
       "sale_price": null,
       "profit": null,
@@ -332,7 +332,7 @@
       "settlement_date": null,
       "status": "in_stock",
       "settlement_id": null,
-      "notes": "車検 R9.8"
+      "notes": "車検 R9.8。落札462,320＋消費税44,710＝税込507,030円（USS大阪）"
     }
   ]
 }
