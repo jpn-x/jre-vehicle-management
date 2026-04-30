@@ -5,7 +5,7 @@
     "investment_date": "2025-11-12",
     "profit_ratio_jre": 0.4,
     "profit_ratio_hayachyan": 0.6,
-    "last_updated": "2026-04-24"
+    "last_updated": "2026-04-30"
   },
   "settlements": [
     {
@@ -36,6 +36,16 @@
       "principal": 1104240,
       "gross_profit": 648819,
       "jre_distribution": 259572,
+      "confirmed": true
+    },
+    {
+      "id": "S004",
+      "date": "2026-04-30",
+      "label": "第4回精算（2台）",
+      "vehicles": ["V008", "V009"],
+      "principal": 850660,
+      "gross_profit": 537471,
+      "jre_distribution": 214988,
       "confirmed": true
     }
   ],
@@ -194,19 +204,19 @@
       "year": "H15",
       "color": "シルバー",
       "mileage": 84012,
-      "purchase_date": "2026-02-01",
+      "purchase_date": "2026-02-13",
       "purchase_price": 616830,
-      "expenses": null,
-      "total_cost": 616830,
+      "expenses": 161009,
+      "total_cost": 777839,
       "sale_date": "2026-03-30",
-      "sale_price": null,
-      "profit": null,
-      "jre_share": null,
+      "sale_price": 1110000,
+      "profit": 332161,
+      "jre_share": 132864,
       "principal_returned_date": "2026-04-03",
-      "settlement_date": null,
-      "status": "principal_returned",
-      "settlement_id": null,
-      "notes": "元金回収済、利益精算待ち"
+      "settlement_date": "2026-04-30",
+      "status": "settled",
+      "settlement_id": "S004",
+      "notes": "車検・登録・自賠責・自動車税・保険含む諸経費161,009円。返還金749,694円（元金616,830＋JRE分132,864）"
     },
     {
       "id": "V009",
@@ -217,17 +227,17 @@
       "mileage": 63755,
       "purchase_date": "2026-03-25",
       "purchase_price": 233830,
-      "expenses": null,
-      "total_cost": 233830,
+      "expenses": 110860,
+      "total_cost": 344690,
       "sale_date": "2026-04-02",
-      "sale_price": null,
-      "profit": null,
-      "jre_share": null,
+      "sale_price": 550000,
+      "profit": 205310,
+      "jre_share": 82124,
       "principal_returned_date": "2026-04-17",
-      "settlement_date": null,
-      "status": "principal_returned",
-      "settlement_id": null,
-      "notes": "元金回収済、利益精算待ち"
+      "settlement_date": "2026-04-30",
+      "status": "settled",
+      "settlement_id": "S004",
+      "notes": "車検・登録・重量税・自賠責・自動車税含む諸経費110,860円。返還金315,954円（元金233,830＋JRE分82,124）"
     },
     {
       "id": "V010",
